@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div style="display: flex; flex-direction: column;align-items: center;margin-top: 20px;">
+	
+	{% include '_post.html' %}
+
+	<form class="report-form" method="POST">
+		<p style="margin-bottom: 5px;">Report illegal content</p>
+		{{form.csrf_token}}
+		{{form.post_num(value=post.post_num)}}
+		{{form.reason(placeholder="Reason for report")}}
+		{{form.submit}}
+
+		{% for error in form.submit.errors %}
+			{{error}}
+		{% endfor %}
+		{% for error in form.reason.errors %}
+			{{error}}
+		{% endfor %}
+	</form>
+</div>
+
+{% endblock %}

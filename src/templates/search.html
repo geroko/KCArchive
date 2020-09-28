@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<form action="{{url_for('search_results')}}" class="search-form" method="GET">
+	{{form.hidden_tag()}}
+	{{form.post_num(placeholder="Post Number")}}
+	{{form.subject(placeholder="Subject")}}
+	{{form.message(placeholder="Message")}}
+	<div>
+		{{form.is_op}}
+		<label>Is OP</label>
+	</div>
+	<label>Post Flag: </label>
+	{{form.flag}}
+	<label>Start Date: </label>
+	{{form.start_date}}
+	<label>End Date: </label>
+	{{form.end_date}}
+	{{form.submit}}
+
+	{% for error in form.subject.errors %}
+		{{error}}
+	{% endfor %}
+	{% for error in form.message.errors %}
+		{{error}}
+	{% endfor %}
+	{% for error in form.submit.errors %}
+		{{error}}
+	{% endfor %}
+</form>
+
+{% if posts %}
+	<h1>Search Results:</h1>
+	<div class="search-results">
+	{% for post in posts.items %}
+		
+		{% include "_post.html" %}
+
+	{% endfor %}
+	</div>
+
+	<div class="page-nav">
+	<a href="{{url_for('search_results', page_num=posts.prev_num, **query)}}">&lt;</a>
+	{% for page in posts.iter_pages() %}
+		{% if page %}
+			{% if page == posts.page %}
+			<a href="{{url_for('search_results', page_num=page, **query)}}" style="background: lightsteelblue;">{{page}}</a>
+			{% else %}
+			<a href="{{url_for('search_results', page_num=page, **query)}}">{{page}}</a>
+			{% endif %}
+		{% else %}
+		<span>...</span>
+		{% endif %}
+
+	{% endfor %}
+	<a href="{{url_for('search_results', page_num=posts.next_num, **query)}}">&gt;</a>
+	</div>
+{% endif %}
+
+{% endblock %}

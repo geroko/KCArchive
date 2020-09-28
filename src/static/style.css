@@ -1,0 +1,334 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+img {
+	vertical-align: top;
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
+}
+
+a {
+	text-decoration: none;
+}
+
+li {
+	list-style-type: none;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	background: #eee;
+	font: 15px sans-serif;
+}
+
+nav {
+	display: flex;
+	background: #333;
+	align-items: center;
+}
+
+nav > span {
+	font-size: 28px;
+	font-weight: bold;
+	margin: 0px 10px;
+	color: white;
+	text-shadow: 2px 2px black;
+}
+
+nav > a {
+	padding: 15px 25px;
+	color: white;
+	text-decoration: none;
+	font-size: 17px;
+	text-shadow: 1px 2px black;
+	font-weight: bold;
+}
+
+nav > a:hover {
+	background: #444;
+}
+
+.thread-container {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 8px;
+}
+
+.post-container {
+	display: flex;
+	flex-direction: column;
+	margin: 4px;
+	border: 1px solid gray;
+	max-width: 97%;
+	background: lightgray
+}
+
+.post-header {
+	display: flex;
+	padding: 2px;
+	justify-content: space-between;
+}
+
+.post-info {
+	display: flex;
+}
+
+.post-info > * {
+	margin-right: 5px;
+}
+
+.post-content {
+	display: flex;
+	word-break: break-word;
+}
+
+.post-images {
+	display: flex;
+}
+
+.post-images img {
+	max-width: 250px;
+	max-height: 250px;
+}
+
+.image-container {
+	display: flex;
+	flex-direction: column;
+	margin: 8px;
+}
+
+.image-info {
+	display: flex;
+	flex-direction: column;
+}
+
+.post-message {
+	padding: 10px;
+}
+
+.search-form {
+	display: flex;
+	flex-direction: column;
+	align-self: center;
+	background: lightgrey;
+	padding: 10px;
+	border: 1px solid gray;
+	margin: 15px;
+	min-width: 220px;
+}
+
+.search-form input, select {
+	margin-bottom: 5px;
+	padding: 1px;
+}
+
+.search-results {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 8px;
+}
+
+.cat-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.cat-thread {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 220px;
+	border: 1px solid gray;
+	margin: 4px;
+	height: 300px;
+	overflow: hidden;
+	background: lightgray;
+}
+
+.cat-thread:hover {
+	overflow-y: auto;
+}
+
+.cat-thread a img {
+	max-width: 100%;
+}
+
+.cat-header {
+	padding: 2px;
+	display: flex;
+	word-break: break-word;
+	flex-shrink: 0;
+	align-items: center;
+}
+
+.cat-header img {
+	padding: 3px;
+}
+
+.cat-message {
+	padding: 4px;
+	word-break: break-word;
+}
+
+.reply-link {
+	text-decoration: none;
+	color: red;
+}
+
+.report-form {
+	display: flex;
+	flex-direction: column;
+	min-width: 250px;
+	text-align: center;
+	background: lightgray;
+	padding: 8px;
+	border: 1px solid gray;
+	margin: 10px;
+}
+
+.report-form textarea {
+	min-height: 120px;
+	min-width: 248px;
+	margin-bottom: 5px;
+	padding: 2px;
+}
+
+.report-form [type=submit] {
+	padding: 4px;
+}
+
+.report {
+	display: flex;
+}
+
+.report > * {
+	margin-right: 5px;
+}
+
+.page-nav {
+	display: flex;
+	flex-wrap: wrap;
+	align-self: center;
+	margin: 20px;
+	font: 25px sans-serif;
+}
+
+.page-nav > * {
+	border: 1px solid gray;
+	background: lightgray;
+	padding: 4px 6px;
+	color: black;
+	margin: 3px 5px;
+}
+
+.page-nav > a:hover {
+	background: lightsteelblue;
+}
+
+.thread-footer {
+	display: flex;
+	margin: 10px;
+}
+
+.thread-footer a {
+	margin: 5px 8px;
+}
+
+.subject {
+	color: #c33;
+	font-weight: bold;
+}
+
+.flashed-message {
+	background: lightgray;
+	border: 1px solid gray;
+	margin: 10px;
+	padding: 15px 25px;
+	align-self: center;
+}
+
+.flags-list {
+	background: lightgray;
+	border: 1px solid gray;
+	align-self: flex-start;
+	margin: 10px;
+	padding: 5px 12px;
+	flex-shrink: 0;
+}
+
+.flags-list li {
+	padding: 3px;
+}
+
+.most-posted {
+	display: flex;
+	flex-wrap: wrap;
+	align-self: flex-start;
+	justify-content: center;
+	align-items: center;
+}
+
+.most-posted > div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background: lightgray;
+	margin: 5px;
+	border: 1px solid gray;
+}
+
+.site-info {
+	display: flex;
+	flex-direction: column;
+	background: lightgray;
+	border: 1px solid gray;
+	max-width: 700px;
+	align-self: center;
+	margin: 25px;
+	line-height: 25px;
+}
+
+.site-info > div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 20px;
+}
+
+.site-info h2 {
+	margin: 5px;
+}
+
+.greentext {
+	color: #077;
+}
+
+.orangetext {
+	color: #e04000;
+}
+
+.post-container:target {
+	background: lightsteelblue;
+}
+
+.mod-label {
+	color: red;
+	font-weight: bold;
+}
+
+.mod-label::before {
+	content: "## ";
+}
+
+.mod-label::after {
+	content: " ##";
+}

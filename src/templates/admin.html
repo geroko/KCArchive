@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<ul>
+<form action="{{url_for('dismiss_all')}}" method="POST">
+	<input type="submit" name="" value="Dismiss All Reports">
+</form>
+{% for report in reports %}
+<li class="report">
+	<form action="{{url_for('dismiss', report_id=report.id)}}" method="POST">
+		<input type="submit" name="" value="Dismiss">
+	</form>
+	<span>{{report.date.strftime("%Y-%m-%d %H:%M:%S")}}</span>
+	<span>{{report.reason}}</span>
+	<span>{{report.ip}}</span>
+	<a href="{{url_for('thread', thread_num=report.post.thread.thread_num, _anchor=report.post.post_num)}}">#{{report.post.post_num}}</a>
+</li>	
+{% endfor %}
+</ul>
+
+{% endblock %}
