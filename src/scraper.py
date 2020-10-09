@@ -4,122 +4,128 @@ from datetime import datetime
 import logging
 
 import requests
-from bs4 import BeautifulSoup
+import dateutil.parser
 
 from archive import app, db, Post, Thread, File
 
 logging.basicConfig(level=logging.INFO, filename='kcarchive.log', format='%(message)s')
 
-# TODO: Scrape using lynxchan api
-def kc_scrape():
+def scrape_catalog(url):
 	logging.info(f'\nStarted: {datetime.utcnow()}')
-	for thread in get_threads():
-		try:
-			scrape_thread(thread)
-		except:
-			continue
-	logging.info(f'Finished: {datetime.utcnow()}')
-
-def get_threads():
-	res = requests.get('https://kohlchan.net/int/catalog.html')
+	res = requests.get(url, timeout=5)
 	time.sleep(1)
-	if res.ok:
-		soup = BeautifulSoup(res.text, 'lxml')
-		thread_links = []
-		for thread in soup.find_all('a', class_='labelSubject'):
-			thread_link = 'https://kohlchan.net' + thread['href']
-			thread_links.append(thread_link)
-		return thread_links
-
-def scrape_thread(thread_url):
-	res = requests.get(thread_url)
-	time.sleep(1)
-	if res.ok:
-		soup = BeautifulSoup(res.text, 'lxml')
-
-		op_post = soup.find('div', class_='innerOP')
-		thread = scrape_post(op_post, is_op=True)
-
-		reply_posts = soup.find_all('div', class_='innerPost')
-		for post in reply_posts:
+	if res.status_code == 200:
+		catalog = res.json()
+		for thread in catalog:
 			try:
-				scrape_post(post, thread=thread)
+				thread_url = f"https://kohlchan.net/int/res/{thread['threadId']}.json"
+				scrape_thread(thread_url)
+
 			except Exception as e:
-				logging.error(f'Post failed: {e}')
+				print(f"Thread failed: {e}\n{thread}")
 				continue
 
-		thread.total_posts = len(thread.posts_contained)
+	logging.info(f'Finished: {datetime.utcnow()}')
+	return
+
+def scrape_thread(url):
+	res = requests.get(url, timeout=5)
+	time.sleep(1)
+	if res.status_code == 200:
+		thread = res.json()
+		posts = thread['posts']
+
+		# Try to get thread from db, else instantiate new Thread
+		thread_orm = Thread.query.get(thread['threadId'])
+		if thread_orm == None:
+			thread_orm = Thread(thread_num=thread['threadId'])
+			db.session.add(thread_orm)
+
+		scrape_post(thread, thread_orm, is_op=True)
+
+		for post in posts:
+			try:
+				scrape_post(post, thread_orm, is_op=False)
+
+			except Exception as e:
+				logging.error(f'Post failed: {e}\n{post}')
+				continue
+
+		thread_orm.total_posts = len(thread_orm.posts_contained)
 		db.session.commit()
 
-def scrape_post(post, thread=None, is_op=False):
-	post_num = post.find('a', class_='linkQuote').text
-	
-	post_orm = Post.query.get(post_num)
-	if post_orm and post_orm.is_op:
-		return post_orm.thread
-	if post_orm:
-		return 
+	return
 
-	flag = post.find('img', class_='imgFlag')['src'].split('/')[3]
-	date = post.find('span', class_='labelCreated').text
-	date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
-	try:
-		subject = post.find('span', class_='labelSubject').text
-	except:
+def scrape_post(post_json, thread_orm, is_op=False):
+	if is_op == True:  # OP post uses different key for post number
+		post_num = post_json['threadId']
+	else:
+		post_num = post_json['postId']
+
+	if Post.query.get(post_num):
+		return
+
+	mod = post_json['signedRole']
+	flag = post_json['flag'].split('/')[-1]
+	date = dateutil.parser.isoparse(post_json['creation'])
+	subject = post_json['subject']
+	if subject == None:
 		subject = ''
-	try:
-		mod = post.find('span', class_='labelRole').text
-	except:
-		mod = None
-	message = post.find('div', class_='divMessage').text
+	message = post_json['message']
+	ban_message = post_json.get('banMessage', None)
+	files = post_json['files']
 
-	if thread == None:
-		thread = Thread(thread_num=post_num)
-		db.session.add(thread)
-
-	post_orm = Post(flag=flag, date=date, post_num=post_num, subject=subject, mod=mod, message=message, is_op=is_op, thread=thread)
+	post_orm = Post(flag=flag, date=date, post_num=post_num, subject=subject, mod=mod, message=message, is_op=is_op, thread=thread_orm, ban_message=ban_message)
 	db.session.add(post_orm)
 
-	files = post.find_all('figure', class_='uploadCell')
 	for file in files:
 		try:
 			scrape_file(file, post_orm)
-		except Exception as e:
-			logging.error(f'File failed: {e}')
-			continue
-	
-	return thread
 
-def scrape_file(file, post):
-	if file.img['src'].split('/')[1] == 'spoiler.png':
-		filename = "t_" + file.find('a', class_='imgLink')['href'].split('/')[2].split('.')[0] # Create link for spoilered thumbs
+		except Exception as e:
+			logging.error(f'File failed: {e}\n{file}')
+			continue
+
+	return
+
+def scrape_file(file_json, post_orm):
+	orig_name = file_json['originalName']
+	size = file_json['size']
+
+	filename = file_json['thumb'].split('/')[-1]
+	if filename == 'spoiler.png':  # Generate filename for spoilered thumbs
+		filename = 't_' + file_json['path'].split('/')[-1].split('.')[0]
+
+	width, height = file_json['width'], file_json['height']
+	if width == None or height == None:  # If no width or height (such as for audio files), set to None
+		dimensions = None
 	else:
-		filename = file.img['src'].split('/')[2] # Audio files with generic thumbnail will cause exception
-	orig_name = file.find('a', class_='originalNameLink')['title']
-	size = file.find('span', class_='sizeLabel').text
-	dimensions = file.find('span', class_='dimensionLabel').text
-	file = File(filename=filename, orig_name=orig_name, size=size, dimensions=dimensions, post=post)
-	db.session.add(file)
-	if file.check_blacklisted():
+		dimensions = f"{width}x{height}"
+
+	file_orm = File(filename=filename, orig_name=orig_name, size=size, dimensions=dimensions, post=post_orm)
+	db.session.add(file_orm)
+
+	if file_orm.check_blacklisted():
 		return
-	
-	img_link = 'https://kohlchan.net/.media/' + filename
-	try:
-		res = requests.get(img_link)
-		time.sleep(1)
-		if res.ok:
-			path = os.path.join(app.config['MEDIA_FOLDER'], filename)
-			with open(path, 'wb') as f:
-				f.write(res.content)
-	except:
-		logging.error(f'Failed to Download: {img_link}')
-		return		
-	
+
+	if os.path.isfile(os.path.join(app.config['MEDIA_FOLDER'], filename)):
+		return
+
+	if filename == 'genericThumb.png' or filename == 'audioGenericThumb.png':
+		file_url = f"https://kohlchan.net/{filename}"
+	else:
+		file_url = f"https://kohlchan.net/.media/{filename}"
+
+	res = requests.get(file_url, timeout=5)
+	time.sleep(1)
+	if res.status_code == 200:
+		path = os.path.join(app.config['MEDIA_FOLDER'], filename)
+		with open(path, 'wb') as f:
+			f.write(res.content)
+
+	return
 
 def purge_blacklisted_files():
-	if not os.path.isfile(app.config['BLACKLIST_FILE']):
-		f = open(app.config['BLACKLIST_FILE'], 'a')
-		f.close()
 	with open(app.config['BLACKLIST_FILE'], 'r') as f:
 		for line in f:
 			for file in os.listdir(app.config['MEDIA_FOLDER']):
@@ -127,4 +133,4 @@ def purge_blacklisted_files():
 					os.remove(os.path.join(app.config['MEDIA_FOLDER'], file))
 	
 if __name__ == '__main__':
-	kc_scrape()
+	scrape_catalog('https://kohlchan.net/int/catalog.json')

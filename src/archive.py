@@ -28,6 +28,9 @@ migrate = Migrate(app, db)
 if not os.path.isdir(app.config['MEDIA_FOLDER']):
 	os.mkdir(app.config['MEDIA_FOLDER'])
 
+if not os.path.isfile(app.config['BLACKLIST_FILE']):
+	open(app.config['BLACKLIST_FILE'], 'w').close()
+
 FLAG_MAP = {
 	'us.png':'United States',
 	'de.png':'Germany',
@@ -102,6 +105,17 @@ FLAG_MAP = {
 	'bg.png':'Bulgaria',
 	'ec.png':'Ecuador',
 	'uy.png':'Uraguay',
+	'ge.png':'Georgia',
+	'cn.png':'China',
+	'sd.png':'Sudan',
+	'al.png':'Albania',
+	'ph.png':'Philippines',
+	'tw.png':'Taiwan',
+	'ba.png':'Bosnia',
+	'pk.png':'Pakistan',
+	'np.png':'Nepal',
+	'iq.png':'Iraq',
+	'tn.png':'Tunisia',
 	'kohl.png':'Moderator'
 }
 
@@ -116,6 +130,7 @@ class Post(db.Model):
 	flag = db.Column(db.String)
 	mod = db.Column(db.String, default=None)
 	is_op = db.Column(db.Boolean, default=False)
+	ban_message = db.Column(db.String, default=None)
 	parent_thread = db.Column(db.Integer, db.ForeignKey('thread.thread_num'), nullable=False)
 	files_contained = db.relationship('File', backref='post', cascade='delete')
 	reports_submitted = db.relationship('Report', backref='post')
@@ -126,6 +141,11 @@ class Post(db.Model):
 		formatted = re.sub(r'(&gt;&gt;(\d+))', r'<a href="#\2" class="reply-link">\1</a>', formatted)
 		formatted = re.sub(r'^(&gt;.*)$', r'<span class="greentext">\1</span>', formatted, flags=re.MULTILINE)
 		formatted = re.sub(r'^(&lt;.*)$', r'<span class="orangetext">\1</span>', formatted, flags=re.MULTILINE)
+		formatted = re.sub(r'\[spoiler\](.*)\[/spoiler\]', r'<span class="spoiler">\1</span>', formatted)
+		formatted = re.sub(r'\*\*(.*)\*\*', r'<span class="spoiler">\1</span>', formatted)
+		formatted = re.sub(r'==(.*)==', r'<span class="redtext">\1</span>', formatted)
+		formatted = re.sub(r'\[b\](.*)\[/\]', r'<b>\1</b>', formatted)
+		formatted = re.sub(r'\'\'\'(.*)\'\'\'', r'<b>\1</b>', formatted)
 		formatted = re.sub(r'\n', r'<br>', formatted)
 
 		formatted = bleach.clean(formatted, tags=['br', 'a', 'span', 'b', 'i'], attributes=['class', 'id', 'href'])
@@ -137,7 +157,7 @@ class Post(db.Model):
 		return f'Posted {format_timedelta(td)} ago'
 	
 	def get_flag_name(self):
-		return FLAG_MAP[self.flag]
+		return FLAG_MAP.get(self.flag, 'Not Available')
 
 class Thread(db.Model):
 	thread_num = db.Column(db.Integer, primary_key=True)
@@ -169,9 +189,6 @@ class File(db.Model):
 			return self.orig_name
 
 	def check_blacklisted(self):
-		if not os.path.isfile(app.config['BLACKLIST_FILE']):
-			f = open(app.config['BLACKLIST_FILE'], 'a')
-			f.close()
 		with open(app.config['BLACKLIST_FILE'], 'r') as f:
 			for line in f:
 				if self.filename == line.strip('\n'):
@@ -180,7 +197,7 @@ class File(db.Model):
 class Report(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	ip = db.Column(db.String, nullable=False)
-	date = db.Column(db.DateTime, nullable=False)
+	date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	reason = db.Column(db.String, nullable=False)
 	token = db.Column(db.String, nullable=False)
 	dismissed = db.Column(db.Boolean, default=False)
@@ -188,6 +205,7 @@ class Report(db.Model):
 
 if not os.path.isfile(os.path.join(os.path.dirname(app.root_path), 'kcarchive.db')):
 	db.create_all()
+
 
 '''Forms'''
 def prevent_blank_search(form, submit):
@@ -251,6 +269,7 @@ class ReportForm(FlaskForm):
 	reason = TextAreaField(validators=[DataRequired(), Length(min=4, max=250)])
 	submit = SubmitField(validators=[report_cooldown, check_already_reported])
 
+
 '''Routes'''
 @app.route('/media/<filename>')
 def get_media(filename):
@@ -278,11 +297,11 @@ def search():
 def search_results(page_num):
 	form = SearchForm()
 	if form.validate():
-		query = {'post_num':request.args.get('post_num'), 'subject':request.args.get('subject'), 'message':request.args.get('message'), 'is_op':request.args.get('is_op'), 'flag':request.args.get('flag'), 'start_date':request.args.get('start_date'), 'end_date':request.args.get('end_date')}
 		posts = form.get_results()
+		count = posts.count()
 		posts = posts.paginate(page=page_num, per_page=30, error_out=False)
 
-		return render_template('search.html', form=form, posts=posts, title="Search Results", query=query)
+		return render_template('search.html', form=form, posts=posts, title="Search Results", query=request.args, count=count)
 	return render_template('search.html', form=form, title="Search")
 	
 
@@ -296,7 +315,7 @@ def report(post_num):
 			return redirect(request.referrer)
 
 		ip = sha256(get_ip_address().encode('utf-8')).hexdigest()
-		report = Report(ip=ip, date=datetime.utcnow(), reason=form.reason.data, token=form.csrf_token.data, post=post)
+		report = Report(ip=ip, reason=form.reason.data, token=form.csrf_token.data, post=post)
 		db.session.add(report)
 		db.session.commit()
 			
@@ -308,7 +327,7 @@ def report(post_num):
 def stats():
 	flag_list = Post.query.with_entities(Post.flag, func.count(Post.flag)).group_by(Post.flag).order_by(func.count(Post.flag).desc()).all()
 	
-	most_posted = File.query.with_entities(File.filename, func.count(File.filename)).group_by(File.filename).order_by(func.count(File.filename).desc()).limit(100)
+	most_posted = File.query.filter(File.filename != 'audioGenericThumb.png', File.filename != 'genericThumb.png').with_entities(File.filename, func.count(File.filename)).group_by(File.filename).order_by(func.count(File.filename).desc()).limit(100)
 
 	return render_template('stats.html', flag_list=flag_list, most_posted=most_posted, title='Stats', FLAG_MAP=FLAG_MAP)
 

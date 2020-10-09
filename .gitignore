@@ -3,3 +3,5 @@ media/
 *.db
 blacklist.txt
 *.log
+*.db-journal
+venv/
