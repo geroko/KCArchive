@@ -91,6 +91,7 @@ nav > a:hover {
 
 .post-images {
 	display: flex;
+	flex-wrap: wrap;
 }
 
 .post-images img {
@@ -200,10 +201,6 @@ nav > a:hover {
 	min-width: 248px;
 	margin-bottom: 5px;
 	padding: 2px;
-}
-
-.report-form [type=submit] {
-	padding: 4px;
 }
 
 .report {
@@ -316,6 +313,16 @@ nav > a:hover {
 	color: #e04000;
 }
 
+.redtext {
+	color: #af0a0f;
+	font-weight: bold;
+	font-size: 125%;
+}
+
+.post-op, .current-page {
+	background: lightsteelblue;
+}
+
 .post-container:target {
 	background: lightsteelblue;
 }
@@ -331,4 +338,18 @@ nav > a:hover {
 
 .mod-label::after {
 	content: " ##";
+}
+
+.spoiler {
+	background: black;
+}
+
+.spoiler:hover {
+	background: inherit;
+}
+
+.ban-msg {
+	color: red;
+	margin-top: 10px;
+	font-weight: bold;
 }

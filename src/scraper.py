@@ -61,10 +61,6 @@ def scrape_post(post_json, thread_orm, is_op=False):
 		post_num = post_json['threadId']
 	else:
 		post_num = post_json['postId']
-
-	if Post.query.get(post_num):
-		return
-
 	mod = post_json['signedRole']
 	flag = post_json['flag'].split('/')[-1]
 	date = dateutil.parser.isoparse(post_json['creation'])
@@ -74,6 +70,11 @@ def scrape_post(post_json, thread_orm, is_op=False):
 	message = post_json['message']
 	ban_message = post_json.get('banMessage', None)
 	files = post_json['files']
+
+	post_orm = Post.query.get(post_num)
+	if post_orm:
+		post_orm.ban_message = ban_message
+		return
 
 	post_orm = Post(flag=flag, date=date, post_num=post_num, subject=subject, mod=mod, message=message, is_op=is_op, thread=thread_orm, ban_message=ban_message)
 	db.session.add(post_orm)
