@@ -10,7 +10,7 @@
 			<span class="mod-label">{{post.mod}}</span>
 			{% endif %}
 			{% if post.subject %}
-				<span class="subject">{{post.subject}}</span>
+				<span class="subject">{{post.subject|safe}}</span>
 			{% endif %}
 			<span title="{{post.get_timedelta()}}">{{post.date.strftime("%Y-%m-%d %H:%M:%S")}}</span>
 			<a href="{{url_for('thread', thread_num=post.thread.thread_num, _anchor=post.post_num)}}">#{{post.post_num}}</a>
@@ -40,7 +40,12 @@
 			<div class="image-container">
 				<div class="image-info">
 					<span title="{{file.orig_name}}">{{file.get_cropped_title()}}</span>
-					<span>{{file.size}} {{file.dimensions}}</span>
+					<div>	
+						<span>{{file.get_formatted_size()}}</span>
+						{% if file.dimensions %}
+							<span> {{file.dimensions}}</span>
+						{% endif %}
+					</div>
 				</div>
 				<div>
 					<a href="{{url_for('get_media', filename=file.filename)}}">
