@@ -1,7 +1,11 @@
 __pycache__/
 media/
+instance/
+venv/
+.vscode/
 *.db
-blacklist.txt
 *.log
 *.db-journal
-venv/
+*.pyc
+*.css.map
+blacklist.txt

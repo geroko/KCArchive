@@ -23,7 +23,7 @@ class Post(db.Model):
 	is_op = db.Column(db.Boolean, default=False)
 	ban_message = db.Column(db.String, default=None)
 	parent_thread = db.Column(db.Integer, db.ForeignKey('thread.thread_num'), nullable=False)
-	files_contained = db.relationship('File', backref='post', cascade='delete')
+	files_contained = db.relationship('File', backref='post', cascade='delete', lazy='joined')
 	reports_submitted = db.relationship('Report', backref='post')
 
 	def format_message(self):
@@ -98,6 +98,3 @@ class Report(db.Model):
 	token = db.Column(db.String, nullable=False)
 	dismissed = db.Column(db.Boolean, default=False)
 	post_reported = db.Column(db.Integer, db.ForeignKey('post.post_num'))
-
-if not os.path.isfile(os.path.join(os.path.dirname(app.root_path), 'kcarchive.db')):
-	db.create_all()

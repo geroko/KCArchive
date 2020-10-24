@@ -2,16 +2,15 @@ import os
 
 basedir = os.path.dirname(__file__)
 
-SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(basedir, 'kcarchive.db')}"
-
-SECRET_KEY = os.urandom(16)
-
-MEDIA_FOLDER = os.path.join(basedir, 'media')
-
-BLACKLIST_FILE = os.path.join(basedir, 'blacklist.txt')
-
+# Set DEBUG to false, and change BASIC_AUTH user and pass before deploying
+DEBUG = True
 BASIC_AUTH_USERNAME = 'admin'
 BASIC_AUTH_PASSWORD = 'changeme'
+
+SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, 'kcarchive.db')
+SECRET_KEY = os.urandom(16)
+MEDIA_FOLDER = os.path.join(basedir, 'media')
+BLACKLIST_FILE = os.path.join(basedir, 'blacklist.txt')
 
 FLAG_MAP = {
 	'us.png':'United States',
