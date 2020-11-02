@@ -56,6 +56,13 @@ class Post(db.Model):
 	def get_flag_name(self):
 		return app.config['FLAG_MAP'].get(self.flag, 'Not Available')
 
+	def get_replies(self, posts):
+		replies = []
+		for post in posts:
+			if f'>>{self.post_num}' in post.message:
+				replies.append(post.post_num)
+		return replies
+
 
 class File(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

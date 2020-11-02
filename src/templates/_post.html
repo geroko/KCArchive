@@ -1,57 +1,55 @@
-{% if post.is_op %}
-<div id="{{post.post_num}}" class="post-container post-op">
-{% else %}
-<div id="{{post.post_num}}" class="post-container">
-{% endif %}
-	<div class="post-header" style="justify-content: space-between;">
-		<div class="post-info">
-			<img src="{{url_for('static', filename='flags/' + post.flag)}}" title="{{post.get_flag_name()}}">
-			{% if post.mod %}
-			<span class="mod-label">{{post.mod}}</span>
-			{% endif %}
-			{% if post.subject %}
-				<span class="subject">{{post.subject|safe}}</span>
-			{% endif %}
-			<span title="{{post.get_timedelta()}}">{{post.date.strftime("%Y-%m-%d %H:%M:%S")}}</span>
-			<a href="{{url_for('thread', thread_num=post.thread.thread_num, _anchor=post.post_num)}}">#{{post.post_num}}</a>
-		</div>
+{% macro render_post(post, posts=[]) %}
 
-		<div style="display: flex;">
-			<a href="{{url_for('report', post_num=post.post_num)}}">Report</a>
-			{% if session.get('admin', None) %}
-			{% if post.files_contained %}
-			<form action="{{url_for('delete_files', post_num=post.post_num)}}" method="POST">
-				<input type="submit" name="" value="Delete All Files">
-			</form>
-			{% endif %}
-			{% endif %}
-		</div>
+{% if post.is_op %}
+<div id="{{post.post_num}}" class="post post--op">
+{% else %}
+<div id="{{post.post_num}}" class="post">
+{% endif %}
+	<div class="post__header">
+		<img src="{{url_for('static', filename='flags/' + post.flag)}}" title="{{post.get_flag_name()}}">
+		{% if post.mod %}
+		<span class="mod-label">{{post.mod}}</span>
+		{% endif %}
+		{% if post.subject %}
+			<span class="subject">{{post.subject|safe}}</span>
+		{% endif %}
+		<span title="{{post.get_timedelta()}}">{{post.date.strftime("%Y-%m-%d %H:%M:%S")}}</span>
+		<a href="{{url_for('thread', thread_num=post.thread.thread_num, _anchor=post.post_num)}}" style="margin-right: auto;">#{{post.post_num}}</a>
+	
+		<a href="{{url_for('report', post_num=post.post_num)}}">Report</a>
+		{% if session.get('admin', None) and post.files_contained %}
+		<form action="{{url_for('delete_files', post_num=post.post_num)}}" method="POST">
+			<input type="submit" name="" value="Delete All Files">
+		</form>
+		{% endif %}
+	</div>
+
+	<div class="post__replies">
+		{% for reply in post.get_replies(posts) %}
+			<a href="#{{reply}}" class="post__reply">&gt;&gt;{{reply}}</a>
+		{% endfor %}
 	</div>
 	
 	{% if post.files_contained.__len__() > 1 %}
-	<div class="post-content" style="flex-direction: column;">
+	<div class="post__content" style="flex-direction: column;">
 	{% else %}
-	<div class="post-content">
+	<div class="post__content">
 	{% endif %}
 
 		{% if post.files_contained.__len__() > 0 %}
-		<div class="post-images">
+		<div class="post__images">
 			{% for file in post.files_contained %}
-			<div class="image-container">
-				<div class="image-info">
-					<span title="{{file.orig_name}}">{{file.get_cropped_title()}}</span>
-					<div>	
-						<span>{{file.get_formatted_size()}}</span>
-						{% if file.dimensions %}
-							<span> {{file.dimensions}}</span>
-						{% endif %}
-					</div>
-				</div>
+			<div class="post__image-container">
 				<div>
-					<a href="{{url_for('get_media', filename=file.filename)}}">
-						<img src="{{url_for('get_media', filename=file.filename)}}">
-					</a>
+					<p title="{{file.orig_name}}">{{file.get_cropped_title()}}</p>
+					<span>{{file.get_formatted_size()}}</span>
+					{% if file.dimensions %}
+						<span> {{file.dimensions}}</span>
+					{% endif %}
 				</div>
+				<a href="{{url_for('get_media', filename=file.filename)}}">
+					<img src="{{url_for('get_media', filename=file.filename)}}">
+				</a>	
 				{% if session.get('admin', None) %}
 				<form action="{{url_for('delete_file', file_id=file.id)}}" method="POST">
 					<input type="submit" name="" value="Delete File">
@@ -62,11 +60,13 @@
 		</div>
 		{% endif %}
 
-		<div class="post-message">
+		<div class="post__message">
 			{{post.format_message()|safe}}
 			{% if post.ban_message %}
-				<p class="ban-msg">{{post.ban_message}}</p>
+				<p class="ban-message">{{post.ban_message}}</p>
 			{% endif %}
 		</div>
 	</div>
-</div>	
+</div>
+
+{% endmacro %}
