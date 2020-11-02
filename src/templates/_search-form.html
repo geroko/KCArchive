@@ -1,0 +1,30 @@
+<form action="{{url_for('search_results')}}" class="search-form" method="GET">
+	{{form.hidden_tag()}}
+	{{form.post_num(placeholder="Post Number")}}
+	{{form.subject(placeholder="Subject")}}
+	{{form.message(placeholder="Message")}}
+	{{form.orig_name(placeholder="Filename")}}
+	{{form.filename(placeholder="File Hash (Sha256)")}}
+	
+	<div>
+		{{form.is_op}}
+		<label>Is OP</label>
+		{{form.banned}}
+		<label>Banned</label>		
+	</div>
+	<div>
+		<label>Post Flag: </label>
+		{{form.flag}}
+	</div>
+
+	<div>	
+		<label>Start Date: </label>
+		{{form.start_date}}
+	</div>
+	<div>
+		<label>End Date: </label>
+		{{form.end_date}}
+	</div>
+	
+	{{form.submit(class="submit-btn")}}
+</form>
