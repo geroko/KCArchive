@@ -1,21 +1,21 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<div style="display: flex;">
-	<ul class="flags-list">
+<div class="stats">
+	<ul class="stats__flag-list">
 	{% for flag in flag_list %}
 		<li><img src="{{url_for('static', filename='flags/' + flag[0])}}" title="{{FLAG_MAP[flag[0]]}}"> {{flag[1]}} Posts</li>
 	{% endfor %}
 	</ul>
 
-	<div class="most-posted">
+	<div class="stats__most-posted">
 	{% for file in most_posted %}
-		<div>
-			<span>{{file[1]}} Reposts</span>
+		<div class="stats__most-posted-item">
+			<p>{{file[1]}} Reposts</p>
 			<img src="{{url_for('get_media', filename=file[0])}}">
 		</div>
 	{% endfor %}
-	</div>
+	</div>	
 </div>
 
 {% endblock %}

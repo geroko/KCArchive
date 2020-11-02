@@ -1,17 +1,19 @@
+{% from '_post.html' import render_post %}
+
 {% extends 'layout.html' %}
 {% block content %}
 
-	<div class="thread-container">
+	<div class="thread">
 		{% for post in posts %}
 		
-			{% include "_post.html" %}
+			{{ render_post(post, posts) }}
 
 		{% endfor %}
 	</div>
 
-	<div class="thread-footer">
-		<a href="#">Go To Top</a>
-		<a href="{{url_for('catalog')}}">Return</a>
-	</div>
+	<footer class="thread__footer">
+		<a class="thread__footer-link" href="#">Go to Top</a>
+		<a class="thread__footer-link" href="{{url_for('catalog')}}">Return</a>
+	</footer>
 
 {% endblock %}

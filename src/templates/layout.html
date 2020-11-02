@@ -11,14 +11,16 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-
-	<nav>
-		<span>KC /int/ Archive</span>
-		<a href="{{url_for('catalog')}}">Catalog</a>
-		<a href="{{url_for('search')}}">Search</a>
-		<a href="{{url_for('stats')}}">Stats</a>
-		<a href="{{url_for('about')}}">About</a>
-	</nav>
+	
+	<header class="header">
+		<span class="header__logo">KC /int/ Archive</span>
+		<nav class="header__nav">
+			<a class="header__nav-item" href="{{url_for('catalog')}}">Catalog</a>
+			<a class="header__nav-item" href="{{url_for('search')}}">Search</a>
+			<a class="header__nav-item" href="{{url_for('stats')}}">Stats</a>
+			<a class="header__nav-item" href="{{url_for('about')}}">About</a>
+		</nav>
+	</header>
 
 	{% with messages = get_flashed_messages() %}
 		{% if messages %}

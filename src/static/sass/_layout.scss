@@ -1,0 +1,149 @@
+///////////////////////////////////////////////////////////
+// Header
+.header {
+	display: flex;
+	align-items: center;
+	background-color: #333;
+	box-shadow: 0 .2rem 1rem rgba(0,0,0,.25);
+	color: white;
+	text-align: center;
+
+	&__logo {
+		font-size: 2.8rem;
+		font-weight: 300;
+		letter-spacing: .25rem;
+		padding: 0 1.5rem;
+	}
+
+	&__nav {
+		font-size: 1.7rem;
+		display: flex;
+		align-self: stretch;
+	}
+
+	&__nav-item {
+		display: flex;
+		align-items: center;
+		padding: 1.5rem 2.5rem;
+		transition: all .2s;
+
+		&:hover {
+			background-color: #444;
+		}
+	}
+}
+
+@media only screen and (max-width: 700px) {
+	.header {
+		display: block;
+
+		&__nav-item {
+			padding: 1rem 1.5rem;
+			flex: 1;
+			justify-content: center;
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////
+// Catalog
+.catalog {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+	grid-gap: 1rem;
+	max-width: 160rem;
+	padding: 0 1rem;
+	align-self: center;
+}
+
+@media only screen and (max-width: 1600px) {
+	.catalog {
+		max-width: none;
+	}
+}
+
+@media only screen and (max-width: 720px) {
+	.catalog {
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	}
+}
+
+///////////////////////////////////////////////////////////
+// Thread
+.thread {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 1.5rem 1rem;
+
+	&__footer {
+		background-color: #333;
+		color: #eee;
+		margin-top: auto;
+		display: flex;
+		box-shadow: 0 -.2rem 1rem rgba(0,0,0,.25);
+	}
+
+	&__footer-link {
+		padding: .2rem .5rem;
+
+		&:hover {
+			color: white;
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////
+// Search Results
+.search-results {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 1rem;
+}
+
+///////////////////////////////////////////////////////////
+// Stats
+.stats {
+	display: flex;
+
+	&__flag-list {
+		background: lightgray;
+		border: 1px solid gray;
+		align-self: flex-start;
+		margin: 10px;
+		padding: 5px 12px;
+		flex-shrink: 0;
+
+		& > li {
+			padding: .3rem;
+		}
+	}
+
+	&__most-posted {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-content: flex-start;
+	}
+
+	&__most-posted-item {
+		background: lightgrey;
+		border: 1px solid grey;
+		margin: .5rem;
+		text-align: center;
+	}
+}
+
+
+///////////////////////////////////////////////////////////
+// Container
+.container {
+	max-width: 140rem;
+	display: flex;
+	flex-direction: column;
+	padding: 1rem;
+	margin: 0 auto;
+	align-items: center;
+}

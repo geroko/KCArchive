@@ -1,7 +1,6 @@
-<div class="cat-thread">
-	<div class="cat-header">
-		<img src="{{url_for('static', filename='flags/' + post.flag)}}" title="{{post.get_flag_name()}}">
-		
+<div class="catalog-thread">
+	<div class="catalog-thread__header">
+		<img class="catalog-thread__header-flag" src="{{url_for('static', filename='flags/' + post.flag)}}" title="{{post.get_flag_name()}}">
 		{% if post.subject %}
 			<a class="subject" href="{{url_for('thread', thread_num=post.post_num)}}">{{post.subject|safe}}</a>
 		{% else %}
@@ -11,13 +10,13 @@
 
 	<a href="{{url_for('thread', thread_num=post.post_num)}}">
 		{% if post.files_contained %}
-		<img src="{{url_for('get_media', filename=post.files_contained[0].filename)}}">
+		<img class="catalog-thread__image" src="{{url_for('get_media', filename=post.files_contained[0].filename)}}">
 		{% endif %}
 	</a>
 
-	<span>{{post.thread.total_posts}} Post(s)</span>
+	<p>{{post.thread.total_posts}} Post(s)</p>
 
-	<div class="cat-message">
+	<div class="catalog-thread__message">
 		{{post.format_message()|safe}}
 	</div>
 </div>

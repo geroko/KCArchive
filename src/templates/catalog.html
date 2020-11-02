@@ -1,31 +1,18 @@
+{% from '_paginator.html' import paginator %}
+
 {% extends 'layout.html' %}
 {% block content %}
 	
-	<h1 style="text-align: center;margin: 10px;">Page {{posts.page}}</h1>
+	<h1 class="page-title">Page {{posts.page}}</h1>
 
-	<div class="cat-container">
+	<div class="catalog">
 	{% for post in posts.items %}
 
-		{% include '_cat-thread.html' %}
+		{% include '_catalog-thread.html' %}
 
 	{% endfor %}
 	</div>
 
-	<div class="page-nav">
-	<a href="{{url_for('catalog', page_num=posts.prev_num)}}">&lt;</a>
-	{% for page in posts.iter_pages() %}
-		{% if page %}
-			{% if page == posts.page %}
-			<a href="{{url_for('catalog', page_num=page)}}" style="background: lightsteelblue;">{{page}}</a>
-			{% else %}
-			<a href="{{url_for('catalog', page_num=page)}}">{{page}}</a>
-			{% endif %}
-		{% else %}
-		<span>...</span>
-		{% endif %}
-
-	{% endfor %}
-	<a href="{{url_for('catalog', page_num=posts.next_num)}}">&gt;</a>
-	</div>
-
+	{{ paginator('catalog', posts) }}
+	
 {% endblock %}

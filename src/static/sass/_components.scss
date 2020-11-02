@@ -1,0 +1,294 @@
+///////////////////////////////////////////////////////////
+// Catalog Thread
+.catalog-thread {
+	height: 30rem;
+	background-color: lightgrey;
+	border: 1px solid grey;
+	overflow: hidden;
+	text-align: center;
+	transition: all .2s;
+
+	&:hover {
+		overflow-y: auto;
+	}
+
+	&__header {
+		padding: .3rem;
+	}
+
+	&__image {
+		max-height: 20rem;
+		margin-bottom: .3rem;
+	}
+
+	&__message {
+		padding: .5rem;
+	}
+}
+
+///////////////////////////////////////////////////////////
+// Post
+.post {
+	background-color: lightgrey;
+	border: 1px solid grey;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: .8rem;
+
+	&--op {
+		background-color: lightsteelblue;
+	}
+
+	&:target {
+		border: 2px dashed black;
+	}
+
+	& a {
+		color: blue;
+
+		&:visited {
+			color: purple;
+		}
+	}
+
+	&__header {
+		display: flex;
+		align-items: flex-start;
+		padding: .5rem .5rem 0 .5rem;
+		line-height: 2rem;
+		flex-wrap: wrap;
+
+		& > *:not(:first-child) {
+			margin-left: .5rem;
+		}
+	}
+
+	&__replies {
+		font-size: 1.1rem;
+		padding: .2rem .4rem 0 .4rem;
+
+		& > a:not(:last-child) {
+			margin-right: .2rem;
+		}
+
+		& > a:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&__content {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	&__images {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	&__image-container {
+		margin: .6rem;
+	}
+
+	&__message {
+		padding: .9rem;
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	.post__image-container img {
+		max-width: 12rem;
+	}
+}
+
+///////////////////////////////////////////////////////////
+// Modal
+.modal {
+	position: fixed;
+	display: none;
+	background-color: rgba(0,0,0,.5);
+	width: 100%;
+	height: 100vh;
+	align-items: center;
+	justify-content: center;
+
+	&:target {
+		display: flex;
+	}
+
+	&__background {
+		z-index: 1;
+		position: fixed;
+		width: 100%;
+		height: 100vh;
+	}
+
+	&__content {
+		position: relative;
+		width: 60%;
+		height: 50rem;
+		background-color: #fff;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		color: black;
+		padding: 1.5rem 2rem;
+		line-height: .6;
+		align-self: stretch;
+	}
+
+	&__close {
+		font-size: 4rem;
+	}	
+}
+
+///////////////////////////////////////////////////////////
+// Submit Button
+.submit-btn {
+		align-self: center;
+		padding: .8rem 5.5rem !important;
+		background-color: #333;
+		color: white;
+		cursor: pointer;
+		transition: all .2s;
+		grid-column: 1 / 3;
+		justify-self: center;
+
+		&:hover {
+			background-color: #444;
+		}
+	}
+
+///////////////////////////////////////////////////////////
+// Info Form
+.info-form {
+	display: flex;
+	flex-direction: column;
+	width: 70%;
+	color: black;
+	margin: 2rem;
+	
+
+	& > *:not(:last-child) {
+		margin-bottom: 2rem;
+	}
+
+	& input {
+		height: 2.5rem;
+	}
+
+	& textarea {
+		resize: none;
+		height: 20rem;
+		font-size: 2.5rem;
+	}
+}
+
+///////////////////////////////////////////////////////////
+// Search Form
+.search-form {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-gap: .5rem;
+	margin: 1.5rem;
+	padding: 1rem;
+	background-color: lightgrey;
+	border: 1px solid grey;
+	align-self: center;
+	position: relative;
+
+	& input, select {
+		padding: .2rem;
+	}
+
+	& #subject {
+		grid-column: 1/2;
+	}
+
+	& #orig_name {
+		grid-column: 2/3;
+		grid-row: 2/3;
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	.search-form {
+		display: flex;
+		flex-direction: column;
+
+		& input, select {
+			margin: .2rem;
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////
+// Report Form
+.report-form {
+	background-color: lightgrey;
+	border: 1px solid grey;
+	display: flex;
+	flex-direction: column;
+	margin: 1rem;
+	padding: .8rem;
+	text-align: center;
+
+	& > textarea {
+		min-width: 25rem;
+		min-height: 12rem;
+		margin: .5rem;
+		padding: .5rem;
+	}
+}
+
+///////////////////////////////////////////////////////////
+// Paginator
+.paginator {
+	display: flex;
+	margin: 1.5rem 0;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	
+	&__item {
+		background: lightgrey;
+		border: 1px solid grey;
+		padding: .5rem 1rem;
+		margin: .4rem;
+		font-size: 2rem;
+
+		&:hover {
+			background-color: lightsteelblue;
+		}
+
+		&--selected {
+			background-color: lightsteelblue;
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////
+// Form Errors
+.form-errors {
+	background-color: lightgrey;
+	border: 1px solid grey;
+	padding: 1rem;
+	align-self: center;
+}
+
+///////////////////////////////////////////////////////////
+// Flashed Message
+.flashed-message {
+	background: lightgray;
+	border: 1px solid gray;
+	margin: 1rem;
+	padding: 1.5rem 2.5rem;
+	align-self: center;
+}
