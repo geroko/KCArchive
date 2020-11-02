@@ -1,0 +1,13 @@
+{% macro render_errors(form_errors) %}
+	
+	{% if form_errors %}
+	<div class="form-errors">
+	{% for field in form_errors.values() %}
+		{% for error in field %}
+			<p>{{error}}</p>
+		{% endfor %}
+	{% endfor %}
+	</div>
+	{% endif %}
+
+{% endmacro %}

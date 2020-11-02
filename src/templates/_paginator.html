@@ -1,0 +1,19 @@
+{% macro paginator(url, iterable, query={}) %}
+
+<div class="paginator">
+	<a href="{{url_for(url, page_num=iterable.prev_num, **query)}}" class="paginator__item">&lt;</a>
+	{% for page in iterable.iter_pages() %}
+		{% if page %}
+			{% if page == iterable.page %}
+			<a href="{{url_for(url, page_num=page, **query)}}" class="paginator__item paginator__item--selected">{{page}}</a>
+			{% else %}
+			<a href="{{url_for(url, page_num=page, **query)}}" class="paginator__item">{{page}}</a>
+			{% endif %}
+		{% else %}
+		<span class="paginator__item">...</span>
+		{% endif %}
+	{% endfor %}
+	<a href="{{url_for(url, page_num=iterable.next_num, **query)}}" class="paginator__item">&gt;</a>
+</div>
+
+{% endmacro %}
