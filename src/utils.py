@@ -1,3 +1,5 @@
+from flask import request
+
 def format_timedelta(td):
 	days, remainder = divmod(int(td.total_seconds()), 86400)
 	hours, remainder = divmod(remainder, 3600)
@@ -21,3 +23,8 @@ def format_bytes(num):
 			return f'{num:.2f} {unit}'
 		num /= 1024.0
 	return num
+
+def get_ip_address():
+	if "X-Forwarded-For" in request.headers:
+		return request.headers.getlist("X-Forwarded-For")[0].split()[-1]
+	return request.environ["REMOTE_ADDR"]

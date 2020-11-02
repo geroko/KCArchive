@@ -6,11 +6,7 @@ from sqlalchemy import func
 from src import app, db, basic_auth
 from src.models import Thread, Post, File, Report
 from src.forms import SearchForm, ReportForm
-
-def get_ip_address():
-	if "X-Forwarded-For" in request.headers:
-		return request.headers.getlist("X-Forwarded-For")[0].split()[-1]
-	return request.environ["REMOTE_ADDR"]
+from src.utils import get_ip_address
 
 @app.route('/media/<filename>')
 def get_media(filename):
@@ -108,8 +104,6 @@ def delete_files(post_num):
 	return redirect(request.referrer)
 
 @app.route('/dismiss_all', methods=['POST'])
-
-
 @basic_auth.required
 def dismiss_all():
 	reports = Report.query.filter_by(dismissed=0).all()
