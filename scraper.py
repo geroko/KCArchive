@@ -5,10 +5,12 @@ import logging
 
 import requests
 import dateutil.parser
+from tqdm import tqdm
 
-from archive import app, db, Post, Thread, File
+from src import app, db
+from src.models import Post, Thread, File
 
-logging.basicConfig(level=logging.INFO, filename='kcarchive.log', format='%(message)s')
+logging.basicConfig(level=logging.INFO, filename='instance/kcarchive.log', format='%(message)s')
 
 def scrape_catalog(url):
 	logging.info(f'\nStarted: {datetime.utcnow()}')
@@ -16,7 +18,7 @@ def scrape_catalog(url):
 	time.sleep(1)
 	if res.status_code == 200:
 		catalog = res.json()
-		for thread in catalog:
+		for thread in tqdm(catalog):
 			try:
 				thread_url = f"https://kohlchan.net/int/res/{thread['threadId']}.json"
 				scrape_thread(thread_url)
@@ -61,12 +63,14 @@ def scrape_post(post_json, thread_orm, is_op=False):
 		post_num = post_json['threadId']
 	else:
 		post_num = post_json['postId']
+
+	subject = post_json['subject']
+	if subject == None: # Set None subjects to blank string so search works
+		subject = ''
+
+	date = dateutil.parser.isoparse(post_json['creation'])
 	mod = post_json['signedRole']
 	flag = post_json['flag'].split('/')[-1]
-	date = dateutil.parser.isoparse(post_json['creation'])
-	subject = post_json['subject']
-	if subject == None:
-		subject = ''
 	message = post_json['message']
 	ban_message = post_json.get('banMessage', None)
 	files = post_json['files']
