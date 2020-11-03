@@ -66,12 +66,12 @@
 	&__replies {
 		font-size: 1.1rem;
 		padding: .2rem .4rem 0 .4rem;
+	}
 
-		& > a:not(:last-child) {
-			margin-right: .2rem;
-		}
+	&__reply {
+		margin-left: .2rem;
 
-		& > a:hover {
+		&:hover {
 			text-decoration: underline;
 		}
 	}

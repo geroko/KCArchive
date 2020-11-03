@@ -56,7 +56,7 @@ a {
     .header__nav-item:hover {
       background-color: #444; }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 720px) {
   .header {
     display: block; }
     .header__nav-item {
@@ -68,17 +68,14 @@ a {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
   grid-gap: 1rem;
-  max-width: 160rem;
+  max-width: 85%;
   padding: 0 1rem;
   align-self: center; }
 
-@media only screen and (max-width: 1600px) {
-  .catalog {
-    max-width: none; } }
-
 @media only screen and (max-width: 720px) {
   .catalog {
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); } }
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    max-width: none; } }
 
 .thread {
   display: flex;
@@ -175,9 +172,9 @@ a {
   .post__replies {
     font-size: 1.1rem;
     padding: .2rem .4rem 0 .4rem; }
-    .post__replies > a:not(:last-child) {
-      margin-right: .2rem; }
-    .post__replies > a:hover {
+  .post__reply {
+    margin-left: .2rem; }
+    .post__reply:hover {
       text-decoration: underline; }
   .post__content {
     display: flex;
@@ -341,7 +338,9 @@ a {
   font-size: 125%; }
 
 .reply-link {
-  color: red; }
+  color: red !important; }
+  .reply-link:hover {
+    text-decoration: underline; }
 
 .mod-label {
   color: red;

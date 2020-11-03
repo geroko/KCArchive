@@ -18,7 +18,11 @@
 }
 
 .reply-link {
-	color: red;
+	color: red !important;
+
+	&:hover {
+		text-decoration: underline;
+	}
 }
 
 .mod-label {
