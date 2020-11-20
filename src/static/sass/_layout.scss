@@ -100,36 +100,37 @@
 ///////////////////////////////////////////////////////////
 // Stats
 .stats {
+	display: grid;
+	grid-template-columns: max-content 1fr;
+	align-items: start;
+}
+
+.flag-list {
+	background: lightgray;
+	border: 1px solid gray;
+	margin: 10px;
+	padding: 5px 12px;
+
+	&__item {
+		padding: .3rem;
+	}
+}
+
+.most-posted {
 	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: flex-start;
 
-	&__flag-list {
-		background: lightgray;
-		border: 1px solid gray;
-		align-self: flex-start;
-		margin: 10px;
-		padding: 5px 12px;
-		flex-shrink: 0;
-
-		& > li {
-			padding: .3rem;
-		}
-	}
-
-	&__most-posted {
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		justify-content: center;
-		align-content: flex-start;
-	}
-
-	&__most-posted-item {
+	&__item {
 		background: lightgrey;
 		border: 1px solid grey;
 		margin: .5rem;
 		text-align: center;
 	}
 }
+
 
 
 ///////////////////////////////////////////////////////////

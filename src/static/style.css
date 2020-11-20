@@ -100,23 +100,25 @@ a {
   padding: 1rem; }
 
 .stats {
-  display: flex; }
-  .stats__flag-list {
-    background: lightgray;
-    border: 1px solid gray;
-    align-self: flex-start;
-    margin: 10px;
-    padding: 5px 12px;
-    flex-shrink: 0; }
-    .stats__flag-list > li {
-      padding: .3rem; }
-  .stats__most-posted {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: flex-start; }
-  .stats__most-posted-item {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: start; }
+
+.flag-list {
+  background: lightgray;
+  border: 1px solid gray;
+  margin: 10px;
+  padding: 5px 12px; }
+  .flag-list__item {
+    padding: .3rem; }
+
+.most-posted {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start; }
+  .most-posted__item {
     background: lightgrey;
     border: 1px solid grey;
     margin: .5rem;
@@ -190,41 +192,6 @@ a {
 @media only screen and (max-width: 600px) {
   .post__image-container img {
     max-width: 12rem; } }
-
-.modal {
-  position: fixed;
-  display: none;
-  background-color: rgba(0, 0, 0, 0.5);
-  width: 100%;
-  height: 100vh;
-  align-items: center;
-  justify-content: center; }
-  .modal:target {
-    display: flex; }
-  .modal__background {
-    z-index: 1;
-    position: fixed;
-    width: 100%;
-    height: 100vh; }
-  .modal__content {
-    position: relative;
-    width: 60%;
-    height: 50rem;
-    background-color: #fff;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center; }
-  .modal__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: black;
-    padding: 1.5rem 2rem;
-    line-height: .6;
-    align-self: stretch; }
-  .modal__close {
-    font-size: 4rem; }
 
 .submit-btn {
   align-self: center;

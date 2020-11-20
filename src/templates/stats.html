@@ -2,15 +2,17 @@
 {% block content %}
 
 <div class="stats">
-	<ul class="stats__flag-list">
+	<div class="flag-list">
 	{% for flag in flag_list %}
-		<li><img src="{{url_for('static', filename='flags/' + flag[0])}}" title="{{FLAG_MAP[flag[0]]}}"> {{flag[1]}} Posts</li>
+		<div class="flag-list__item">
+			<img src="{{url_for('static', filename='flags/' + flag[0])}}" title="{{FLAG_MAP[flag[0]]}}" alt=""> <span>{{flag[1]}} Posts</span>
+		</div>
 	{% endfor %}
-	</ul>
+	</div>
 
-	<div class="stats__most-posted">
+	<div class="most-posted">
 	{% for file in most_posted %}
-		<div class="stats__most-posted-item">
+		<div class="most-posted__item">
 			<p>{{file[1]}} Reposts</p>
 			<img src="{{url_for('get_media', filename=file[0])}}">
 		</div>
