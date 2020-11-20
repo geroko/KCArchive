@@ -102,54 +102,6 @@
 }
 
 ///////////////////////////////////////////////////////////
-// Modal
-.modal {
-	position: fixed;
-	display: none;
-	background-color: rgba(0,0,0,.5);
-	width: 100%;
-	height: 100vh;
-	align-items: center;
-	justify-content: center;
-
-	&:target {
-		display: flex;
-	}
-
-	&__background {
-		z-index: 1;
-		position: fixed;
-		width: 100%;
-		height: 100vh;
-	}
-
-	&__content {
-		position: relative;
-		width: 60%;
-		height: 50rem;
-		background-color: #fff;
-		z-index: 2;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
-	&__header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		color: black;
-		padding: 1.5rem 2rem;
-		line-height: .6;
-		align-self: stretch;
-	}
-
-	&__close {
-		font-size: 4rem;
-	}	
-}
-
-///////////////////////////////////////////////////////////
 // Submit Button
 .submit-btn {
 		align-self: center;
@@ -291,4 +243,12 @@
 	margin: 1rem;
 	padding: 1.5rem 2.5rem;
 	align-self: center;
+}
+
+///////////////////////////////////////////////////////////
+// Reply Preview
+.reply-preview {
+	position: absolute;
+	border: 2px dashed black;
+	max-width: 95%;
 }

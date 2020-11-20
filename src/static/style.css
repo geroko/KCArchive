@@ -289,6 +289,11 @@ a {
   padding: 1.5rem 2.5rem;
   align-self: center; }
 
+.reply-preview {
+  position: absolute;
+  border: 2px dashed black;
+  max-width: 95%; }
+
 .subject {
   color: #c33;
   font-weight: 700; }
