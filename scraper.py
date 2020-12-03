@@ -70,7 +70,10 @@ def scrape_post(post_json, thread_orm, is_op=False):
 
 	date = dateutil.parser.isoparse(post_json['creation'])
 	mod = post_json['signedRole']
-	flag = post_json['flag'].split('/')[-1]
+	try:
+		flag = post_json['flag'].split('/')[-1]
+	except:
+		flag = None
 	message = post_json['message']
 	ban_message = post_json.get('banMessage', None)
 	files = post_json['files']
