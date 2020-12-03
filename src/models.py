@@ -1,11 +1,8 @@
 import os
-import re
 from datetime import datetime
 
-import bleach
-
 from src import app, db
-from src.utils import format_timedelta, format_bytes
+from src.utils import format_timedelta, format_bytes, format_message
 
 class Thread(db.Model):
 	thread_num = db.Column(db.Integer, primary_key=True)
@@ -25,29 +22,10 @@ class Post(db.Model):
 	parent_thread = db.Column(db.Integer, db.ForeignKey('thread.thread_num'), nullable=False)
 	files_contained = db.relationship('File', backref='post', cascade='delete', lazy='subquery')
 	reports_submitted = db.relationship('Report', backref='post')
+	markdown = db.Column(db.String)
 
-	def format_message(self):
-		formatted = re.sub(r'>', r'&gt;', self.message)
-		formatted = re.sub(r'<', r'&lt;', formatted)
-		formatted = re.sub(r'(&gt;&gt;(\d+))', r'<a href="#\2" class="reply-link">\1</a>', formatted)
-		formatted = re.sub(r'^(&gt;.*)$', r'<span class="greentext">\1</span>', formatted, flags=re.MULTILINE)
-		formatted = re.sub(r'^(&lt;.*)$', r'<span class="orangetext">\1</span>', formatted, flags=re.MULTILINE)
-		formatted = re.sub(r'\[spoiler\](.*)\[/spoiler\]', r'<span class="spoiler">\1</span>', formatted)
-		formatted = re.sub(r'\*\*(.*)\*\*', r'<span class="spoiler">\1</span>', formatted)
-		formatted = re.sub(r'==(.*)==', r'<span class="redtext">\1</span>', formatted)
-		formatted = re.sub(r'\[b\](.*)\[/b\]', r'<b>\1</b>', formatted)
-		formatted = re.sub(r'\'\'\'(.*)\'\'\'', r'<b>\1</b>', formatted)
-		formatted = re.sub(r'\[i\](.*)\[/i\]', r'<i>\1</i>', formatted)
-		formatted = re.sub(r'\[code\](.*)\[/code\]', r'<code>\1</code>', formatted)
-		formatted = re.sub(r'\[u\](.*)\[/u\]', r'<u>\1</u>', formatted)
-		formatted = re.sub(r'__(.*)__', r'<u>\1</u>', formatted)
-		formatted = re.sub(r'\[s\](.*)\[/s\]', r'<s>\1</s>', formatted)
-		formatted = re.sub(r'~~(.*)~~', r'<s>\1</s>', formatted)
-		formatted = re.sub(r'\n', r'<br>', formatted)
-
-		formatted = bleach.clean(formatted, tags=['br', 'a', 'span', 'b', 'i', 'code', 'u', 's'], attributes=['class', 'id', 'href'])
-		formatted = bleach.linkify(formatted)
-		return formatted
+	def get_formatted_message(self):
+		return format_message(self.message)
 
 	def get_timedelta(self):
 		td = datetime.utcnow() - self.date

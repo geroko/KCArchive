@@ -10,6 +10,7 @@ from sqlalchemy.orm import lazyload
 
 from src import app, db
 from src.models import Post, Thread, File
+from src.utils import format_message
 
 logging.basicConfig(level=logging.INFO, filename='instance/kcarchive.log', format='%(message)s')
 
@@ -88,8 +89,9 @@ def scrape_post(post_json, thread_orm, is_op=False):
 		flag = None
 	message = post_json['message']
 	files = post_json['files']
+	markdown = format_message(message)
 
-	post_orm = Post(flag=flag, date=date, post_num=post_num, subject=subject, mod=mod, message=message, is_op=is_op, thread=thread_orm, ban_message=ban_message)
+	post_orm = Post(flag=flag, date=date, post_num=post_num, subject=subject, mod=mod, message=message, is_op=is_op, thread=thread_orm, ban_message=ban_message, markdown=markdown)
 	db.session.add(post_orm)
 
 	for file in files:

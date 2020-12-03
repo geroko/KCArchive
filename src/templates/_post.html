@@ -63,7 +63,7 @@
 		{% endif %}
 
 		<div class="post__message">
-			{{post.format_message()|safe}}
+			{{post.markdown|safe}}
 			{% if post.ban_message %}
 				<p class="ban-message">{{post.ban_message}}</p>
 			{% endif %}
