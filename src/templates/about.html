@@ -2,26 +2,19 @@
 {% block content %}
 
 <div class="site-info">
-	<div>
-		<h2>Site Info</h2>
-		<p>
-			This site is an archive of the <a href="https://kohlchan.net/int/index.html">https://kohlchan.net/int/</a> imageboard. Only thumbnails are archived to save on costs. The scraper currently runs every 2 hours, so if you can't find a recent post, wait a while for it to be saved.
-		</p>
+	<h2 class="site-info__header">About</h2>
+	{% if about_content %}
+	{% for post in about_content %}
+	<div class="info-post">
+		<h2 class="info-post__header">{{post['subject']|safe}}</h2>
+		<p>{{post['message']|safe}}</p>
 	</div>
-
-	<div>
-		<h2>Reporting</h2>
-		<p>
-			Next to every post is a "Report" button, use this to report any illegal content.
-		</p>
+	{% endfor %}
+	{% else %}
+	<div class="info-post">
+		<h2 class="info-post__header">Nothing here yet
 	</div>
-
-	<div>
-		<h2>Source Code</h2>
-		<p>
-			Source avaliable here: <a href="https://github.com/geroko/KCArchive">https://github.com/geroko/KCArchive</a>. Use this page to report any bugs or request a feature.
-		</p>
-	</div>
+	{% endif %}
 </div>
 
 {% endblock %}

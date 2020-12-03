@@ -60,7 +60,7 @@ a {
   .header {
     display: block; }
     .header__nav-item {
-      padding: 1rem 1.5rem;
+      padding: 1.5rem 0;
       flex: 1;
       justify-content: center; } }
 
@@ -131,6 +131,33 @@ a {
   padding: 1rem;
   margin: 0 auto;
   align-items: center; }
+
+.site-info {
+  border: 1px solid grey;
+  margin: 20px 5px;
+  background-color: lightgrey;
+  max-width: 850px;
+  min-height: 200px;
+  align-self: center; }
+  .site-info a {
+    color: blue; }
+    .site-info a:visited {
+      color: purple; }
+  .site-info__header {
+    padding: 5px 10px;
+    background-color: #333;
+    color: white;
+    font-size: 25px;
+    font-weight: 300;
+    letter-spacing: 3px; }
+
+.info-post {
+  padding: 10px 15px;
+  line-height: 30px;
+  margin-bottom: 10px; }
+  .info-post__header {
+    text-align: center;
+    margin-bottom: 5px; }
 
 .catalog-thread {
   height: 30rem;

@@ -12,6 +12,15 @@ SECRET_KEY = os.urandom(16)
 MEDIA_FOLDER = os.path.join(basedir, 'media')
 BLACKLIST_FILE = os.path.join(basedir, 'blacklist.txt')
 
+'''
+Add posts to about page with syntax:
+{
+	'subject':'First post',
+	'message':'Hello world'
+}
+'''
+ABOUT = []
+
 FLAG_MAP = {
 	'us.png':'United States',
 	'de.png':'Germany',

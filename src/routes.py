@@ -122,7 +122,7 @@ def dismiss(report_id):
 
 @app.route('/about')
 def about():
-	return render_template('about.html', title='About')
+	return render_template('about.html', title='About', about_content=app.config['ABOUT'])
 
 @app.route('/')
 def index():
