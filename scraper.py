@@ -6,14 +6,19 @@ import logging
 import requests
 import dateutil.parser
 from tqdm import tqdm
+from sqlalchemy.orm import lazyload
 
 from src import app, db
 from src.models import Post, Thread, File
 
 logging.basicConfig(level=logging.INFO, filename='instance/kcarchive.log', format='%(message)s')
 
+with open(app.config['BLACKLIST_FILE']) as f:
+	blacklist = [line.strip('\n') for line in f]
+
 def scrape_catalog(url):
 	logging.info(f'\nStarted: {datetime.utcnow()}')
+
 	res = requests.get(url, timeout=5)
 	time.sleep(1)
 	if res.status_code == 200:
@@ -64,6 +69,13 @@ def scrape_post(post_json, thread_orm, is_op=False):
 	else:
 		post_num = post_json['postId']
 
+	ban_message = post_json.get('banMessage', None)
+
+	post_orm = Post.query.options(lazyload(Post.files_contained)).get(post_num)
+	if post_orm:
+		post_orm.ban_message = ban_message
+		return
+
 	subject = post_json['subject']
 	if subject == None: # Set None subjects to blank string so search works
 		subject = ''
@@ -75,13 +87,7 @@ def scrape_post(post_json, thread_orm, is_op=False):
 	except:
 		flag = None
 	message = post_json['message']
-	ban_message = post_json.get('banMessage', None)
 	files = post_json['files']
-
-	post_orm = Post.query.get(post_num)
-	if post_orm:
-		post_orm.ban_message = ban_message
-		return
 
 	post_orm = Post(flag=flag, date=date, post_num=post_num, subject=subject, mod=mod, message=message, is_op=is_op, thread=thread_orm, ban_message=ban_message)
 	db.session.add(post_orm)
@@ -113,7 +119,7 @@ def scrape_file(file_json, post_orm):
 	file_orm = File(filename=filename, orig_name=orig_name, size=size, dimensions=dimensions, post=post_orm)
 	db.session.add(file_orm)
 
-	if file_orm.check_blacklisted():
+	if filename in blacklist:
 		return
 
 	if os.path.isfile(os.path.join(app.config['MEDIA_FOLDER'], filename)):

@@ -23,7 +23,7 @@ class Post(db.Model):
 	is_op = db.Column(db.Boolean, default=False)
 	ban_message = db.Column(db.String, default=None)
 	parent_thread = db.Column(db.Integer, db.ForeignKey('thread.thread_num'), nullable=False)
-	files_contained = db.relationship('File', backref='post', cascade='delete', lazy='joined')
+	files_contained = db.relationship('File', backref='post', cascade='delete', lazy='subquery')
 	reports_submitted = db.relationship('Report', backref='post')
 
 	def format_message(self):
@@ -87,9 +87,8 @@ class File(db.Model):
 
 	def check_blacklisted(self):
 		with open(app.config['BLACKLIST_FILE'], 'r') as f:
-			for line in f:
-				if self.filename == line.strip('\n'):
-					return True
+			if self.filename in [line.strip('\n') for line in f]:
+				return True
 
 	def get_formatted_size(self):
 		if str(self.size).endswith(('B', 'KB', 'MB')):
