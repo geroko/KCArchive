@@ -21,8 +21,8 @@ def catalog(page_num):
 @app.route('/thread/<int:thread_num>')
 def thread(thread_num):
 	thread = Thread.query.get_or_404(thread_num)
-	posts = Post.query.filter_by(thread=thread).all()
-	return render_template('thread.html', thread=thread, posts=posts, title=f'#{thread.thread_num}')
+	posts = Post.query.filter(Post.thread == thread).all()
+	return render_template('thread.html', posts=posts, title=thread.get_title())
 
 @app.route('/search')
 def search():

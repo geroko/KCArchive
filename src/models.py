@@ -9,6 +9,12 @@ class Thread(db.Model):
 	posts_contained = db.relationship('Post', backref='thread')
 	total_posts = db.Column(db.Integer)
 
+	def get_title(self):
+		if self.posts_contained[0].subject:
+			return self.posts_contained[0].subject[:50]
+		else:
+			return self.posts_contained[0].message[:50]
+
 
 class Post(db.Model):
 	post_num = db.Column(db.Integer, primary_key=True)
