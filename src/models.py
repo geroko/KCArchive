@@ -16,6 +16,13 @@ class Thread(db.Model):
 		else:
 			return self.posts_contained[0].message[:50]
 
+	@property
+	def post_count(self):
+		if self.total_posts == 1:
+			return '1 Post'
+
+		return f'{self.total_posts} Posts'
+
 
 class Post(db.Model):
 	post_num = db.Column(db.Integer, primary_key=True)
