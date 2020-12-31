@@ -1,7 +1,6 @@
 ///////////////////////////////////////////////////////////
 // Catalog Thread
 .catalog-thread {
-	height: 30rem;
 	background-color: lightgrey;
 	border: 1px solid grey;
 	overflow: hidden;
@@ -17,12 +16,20 @@
 	}
 
 	&__image {
+		max-width: 20rem;
 		max-height: 20rem;
 		margin-bottom: .3rem;
 	}
 
 	&__message {
 		padding: .5rem;
+	}
+}
+
+@media only screen and (max-width: 450px) {
+	.catalog-thread__image {
+		max-width: 10rem;
+		max-height: 10rem;
 	}
 }
 
@@ -88,6 +95,11 @@
 
 	&__image-container {
 		margin: .6rem;
+
+		& img {
+			max-width: 20rem;
+			max-height: 20rem;
+		}
 	}
 
 	&__message {
@@ -102,20 +114,19 @@
 }
 
 ///////////////////////////////////////////////////////////
-// Submit Button
-.submit-btn {
-		align-self: center;
-		padding: .8rem 5.5rem !important;
-		background-color: #333;
-		color: white;
-		cursor: pointer;
-		transition: all .2s;
-		grid-column: 1 / 3;
-		justify-self: center;
+// Buttons
+.btn-submit {
+	align-self: center;
+	padding: .8rem 5.5rem !important;
+	background-color: #333;
+	color: white;
+	cursor: pointer;
+	transition: all .2s;
+	grid-column: 1 / 3;
+	justify-self: center;
 
-		&:hover {
-			background-color: #444;
-		}
+	&:hover {
+		background-color: #444;
 	}
 
 ///////////////////////////////////////////////////////////

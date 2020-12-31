@@ -7,12 +7,12 @@
 	{% for post in about_content %}
 	<div class="info-post">
 		<h2 class="info-post__header">{{post['subject']|safe}}</h2>
-		<p>{{post['message']|safe}}</p>
+		<div>{{post['message']|safe}}</div>
 	</div>
 	{% endfor %}
 	{% else %}
 	<div class="info-post">
-		<h2 class="info-post__header">Nothing here yet
+		<h2 class="info-post__header">Nothing here yet</h2>
 	</div>
 	{% endif %}
 </div>

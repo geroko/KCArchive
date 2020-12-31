@@ -56,7 +56,7 @@ a {
     .header__nav-item:hover {
       background-color: #444; }
 
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: 768px) {
   .header {
     display: block; }
     .header__nav-item {
@@ -70,12 +70,18 @@ a {
   grid-gap: 1rem;
   max-width: 85%;
   padding: 0 1rem;
-  align-self: center; }
+  align-self: center;
+  grid-auto-rows: 30rem; }
 
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: 768px) {
   .catalog {
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
     max-width: none; } }
+
+@media only screen and (max-width: 450px) {
+  .catalog {
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    grid-auto-rows: 20rem; } }
 
 .thread {
   display: flex;
@@ -134,8 +140,8 @@ a {
 
 .site-info {
   border: 1px solid grey;
-  margin: 20px 5px;
   background-color: lightgrey;
+  margin: 20px;
   max-width: 850px;
   min-height: 200px;
   align-self: center; }
@@ -160,7 +166,6 @@ a {
     margin-bottom: 5px; }
 
 .catalog-thread {
-  height: 30rem;
   background-color: lightgrey;
   border: 1px solid grey;
   overflow: hidden;
@@ -171,10 +176,16 @@ a {
   .catalog-thread__header {
     padding: .3rem; }
   .catalog-thread__image {
+    max-width: 20rem;
     max-height: 20rem;
     margin-bottom: .3rem; }
   .catalog-thread__message {
     padding: .5rem; }
+
+@media only screen and (max-width: 450px) {
+  .catalog-thread__image {
+    max-width: 10rem;
+    max-height: 10rem; } }
 
 .post {
   background-color: lightgrey;
@@ -213,6 +224,9 @@ a {
     flex-wrap: wrap; }
   .post__image-container {
     margin: .6rem; }
+    .post__image-container img {
+      max-width: 20rem;
+      max-height: 20rem; }
   .post__message {
     padding: .9rem; }
 
@@ -220,7 +234,7 @@ a {
   .post__image-container img {
     max-width: 12rem; } }
 
-.submit-btn {
+.btn-submit {
   align-self: center;
   padding: .8rem 5.5rem !important;
   background-color: #333;
@@ -229,7 +243,7 @@ a {
   transition: all .2s;
   grid-column: 1 / 3;
   justify-self: center; }
-  .submit-btn:hover {
+  .btn-submit:hover {
     background-color: #444; }
 
 .info-form {
@@ -357,7 +371,6 @@ a {
 
 .ban-message {
   color: red;
-  margin-top: 10px;
   font-weight: 700; }
 
 .page-title {

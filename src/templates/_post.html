@@ -16,7 +16,7 @@
 			<span class="subject">{{post.subject|safe}}</span>
 		{% endif %}
 		<span title="{{post.get_timedelta()}}">{{post.date.strftime("%Y-%m-%d %H:%M:%S")}}</span>
-		<a href="{{url_for('thread', thread_num=post.thread.thread_num, _anchor=post.post_num)}}" style="margin-right: auto;">#{{post.post_num}}</a>
+		<a href="{{url_for('thread', thread_num=post.parent_thread, _anchor=post.post_num)}}" style="margin-right: auto;">#{{post.post_num}}</a>
 	
 		<a href="{{url_for('report', post_num=post.post_num)}}">Report</a>
 		{% if session.get('admin', None) and post.files_contained %}
@@ -65,7 +65,8 @@
 		<div class="post__message">
 			{{post.markdown|safe}}
 			{% if post.ban_message %}
-				<p class="ban-message">{{post.ban_message}}</p>
+				<br><br>
+				<p class="ban-message">{{post.ban_message|safe}}</p>
 			{% endif %}
 		</div>
 	</div>

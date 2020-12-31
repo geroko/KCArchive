@@ -33,7 +33,7 @@
 	}
 }
 
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: 768px) {
 	.header {
 		display: block;
 
@@ -54,12 +54,20 @@
 	max-width: 85%;
 	padding: 0 1rem;
 	align-self: center;
+	grid-auto-rows: 30rem;
 }
 
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: 768px) {
 	.catalog {
 		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
 		max-width: none;
+	}
+}
+
+@media only screen and (max-width: 450px) {
+	.catalog {
+		grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+		grid-auto-rows: 20rem;
 	}
 }
 
@@ -146,8 +154,8 @@
 // Site Info
 .site-info {
 	border: 1px solid grey;
-	margin: 20px 5px;
 	background-color: lightgrey;
+	margin: 20px;
 	max-width: 850px;
 	min-height: 200px;
 	align-self: center;
