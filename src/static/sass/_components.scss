@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////
 // Catalog Thread
 .catalog-thread {
-	background-color: lightgrey;
-	border: 1px solid grey;
+	background-color: var(--color-primary);
+	border: 1px solid var(--color-border);
 	overflow: hidden;
 	text-align: center;
 	transition: all .2s;
@@ -36,14 +36,14 @@
 ///////////////////////////////////////////////////////////
 // Post
 .post {
-	background-color: lightgrey;
+	background-color: var(--color-primary);
 	border: 1px solid grey;
 	display: flex;
 	flex-direction: column;
 	margin-bottom: .8rem;
 
 	&--op {
-		background-color: lightsteelblue;
+		background-color: var(--color-secondary);
 	}
 
 	&:target {
@@ -162,8 +162,8 @@
 	grid-gap: .5rem;
 	margin: 1.5rem;
 	padding: 1rem;
-	background-color: lightgrey;
-	border: 1px solid grey;
+	background-color: var(--color-primary);
+	border: 1px solid var(--color-border);
 	align-self: center;
 	position: relative;
 
@@ -195,8 +195,8 @@
 ///////////////////////////////////////////////////////////
 // Report Form
 .report-form {
-	background-color: lightgrey;
-	border: 1px solid grey;
+	background-color: var(--color-primary);
+	border: 1px solid var(--color-border);
 	display: flex;
 	flex-direction: column;
 	margin: 1rem;
@@ -221,18 +221,18 @@
 	flex-wrap: wrap;
 	
 	&__item {
-		background: lightgrey;
-		border: 1px solid grey;
+		background-color: var(--color-primary);
+		border: 1px solid var(--color-border);
 		padding: .5rem 1rem;
 		margin: .4rem;
 		font-size: 2rem;
 
 		&:hover {
-			background-color: lightsteelblue;
+			background-color: var(--color-secondary);
 		}
 
 		&--selected {
-			background-color: lightsteelblue;
+			background-color: var(--color-secondary);
 		}
 	}
 }
@@ -240,8 +240,8 @@
 ///////////////////////////////////////////////////////////
 // Form Errors
 .form-errors {
-	background-color: lightgrey;
-	border: 1px solid grey;
+	background-color: var(--color-primary);
+	border: 1px solid var(--color-border);
 	padding: 1rem;
 	align-self: center;
 }
@@ -249,8 +249,8 @@
 ///////////////////////////////////////////////////////////
 // Flashed Message
 .flashed-message {
-	background: lightgray;
-	border: 1px solid gray;
+	background-color: var(--color-primary);
+	border: 1px solid var(--color-border);
 	margin: 1rem;
 	padding: 1.5rem 2.5rem;
 	align-self: center;

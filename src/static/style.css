@@ -1,3 +1,11 @@
+:root {
+  --color-header: #333;
+  --color-background: #eee;
+  --color-border: grey;
+  --color-primary: lightgrey;
+  --color-secondary: lightsteelblue;
+  --color-text: black; }
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -15,6 +23,8 @@ body {
   display: flex;
   flex-direction: column;
   word-break: break-word;
+  background-color: var(--color-background);
+  color: var(--color-text);
   position: relative; }
 
 @media only screen and (max-width: 600px) {
@@ -36,7 +46,7 @@ a {
 .header {
   display: flex;
   align-items: center;
-  background-color: #333;
+  background-color: var(--color-header);
   box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.25);
   color: white;
   text-align: center; }
@@ -90,7 +100,7 @@ a {
   align-items: flex-start;
   padding: 1.5rem 1rem; }
   .thread__footer {
-    background-color: #333;
+    background-color: var(--color-header);
     color: #eee;
     margin-top: auto;
     display: flex;
@@ -112,8 +122,8 @@ a {
   align-items: start; }
 
 .flag-list {
-  background: lightgray;
-  border: 1px solid gray;
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-border);
   margin: 10px;
   padding: 5px 12px; }
   .flag-list__item {
@@ -126,8 +136,8 @@ a {
   justify-content: center;
   align-content: flex-start; }
   .most-posted__item {
-    background: lightgrey;
-    border: 1px solid grey;
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-border);
     margin: .5rem;
     text-align: center; }
 
@@ -140,8 +150,8 @@ a {
   align-items: center; }
 
 .site-info {
-  border: 1px solid grey;
-  background-color: lightgrey;
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-border);
   margin: 20px;
   max-width: 850px;
   min-height: 200px;
@@ -152,7 +162,7 @@ a {
       color: purple; }
   .site-info__header {
     padding: 5px 10px;
-    background-color: #333;
+    background-color: var(--color-header);
     color: white;
     font-size: 25px;
     font-weight: 300;
@@ -167,8 +177,8 @@ a {
     margin-bottom: 5px; }
 
 .catalog-thread {
-  background-color: lightgrey;
-  border: 1px solid grey;
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-border);
   overflow: hidden;
   text-align: center;
   transition: all .2s; }
@@ -189,13 +199,13 @@ a {
     max-height: 10rem; } }
 
 .post {
-  background-color: lightgrey;
+  background-color: var(--color-primary);
   border: 1px solid grey;
   display: flex;
   flex-direction: column;
   margin-bottom: .8rem; }
   .post--op {
-    background-color: lightsteelblue; }
+    background-color: var(--color-secondary); }
   .post:target {
     border: 2px dashed black; }
   .post a {
@@ -268,8 +278,8 @@ a {
   grid-gap: .5rem;
   margin: 1.5rem;
   padding: 1rem;
-  background-color: lightgrey;
-  border: 1px solid grey;
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-border);
   align-self: center;
   position: relative; }
   .search-form input, .search-form select {
@@ -288,8 +298,8 @@ a {
       margin: .2rem; } }
 
 .report-form {
-  background-color: lightgrey;
-  border: 1px solid grey;
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   margin: 1rem;
@@ -308,25 +318,25 @@ a {
   align-items: center;
   flex-wrap: wrap; }
   .paginator__item {
-    background: lightgrey;
-    border: 1px solid grey;
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-border);
     padding: .5rem 1rem;
     margin: .4rem;
     font-size: 2rem; }
     .paginator__item:hover {
-      background-color: lightsteelblue; }
+      background-color: var(--color-secondary); }
     .paginator__item--selected {
-      background-color: lightsteelblue; }
+      background-color: var(--color-secondary); }
 
 .form-errors {
-  background-color: lightgrey;
-  border: 1px solid grey;
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-border);
   padding: 1rem;
   align-self: center; }
 
 .flashed-message {
-  background: lightgray;
-  border: 1px solid gray;
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-border);
   margin: 1rem;
   padding: 1.5rem 2.5rem;
   align-self: center; }
