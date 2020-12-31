@@ -87,6 +87,7 @@ def delete_file(file_id):
 		report.dismissed = 1
 	db.session.commit()
 
+	flash(f'File: {file.cropped_title} deleted.')
 	return redirect(request.referrer)
 
 @app.route('/delete_files/<post_num>', methods=['POST'])
@@ -101,7 +102,8 @@ def delete_files(post_num):
 	for report in reports:
 		report.dismissed = 1
 	db.session.commit()
-	
+
+	flash(f'Files: {", ".join([file.cropped_title for file in post.files_contained])} deleted.')
 	return redirect(request.referrer)
 
 @app.route('/dismiss_all', methods=['POST'])
