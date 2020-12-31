@@ -12,11 +12,24 @@ document.querySelectorAll('.post__reply, .reply-link').forEach(replyLink => {
 });
 
 function renderReply(replyNum, replyLink) {
-	var cloneReply = document.getElementById(replyNum).cloneNode(true);
+	var reply = document.getElementById(replyNum)
+	var cloneReply = reply.cloneNode(true);
 
 	cloneReply.classList.add('reply-preview');
-	cloneReply.style.top = replyLink.offsetTop + replyLink.offsetHeight + 'px';
-	cloneReply.style.left = replyLink.offsetLeft + 'px';
+
+	// Vertical position
+	if (document.body.offsetHeight - replyLink.offsetTop > reply.offsetHeight + 50) {
+		cloneReply.style.top = replyLink.offsetTop + replyLink.offsetHeight + 'px';
+	} else {
+		cloneReply.style.bottom = document.body.offsetHeight - replyLink.offsetTop + 'px';
+	}
+
+	// Horizontal position
+	if (window.innerWidth - replyLink.offsetLeft < window.innerWidth / 2) {
+		cloneReply.style.right = window.innerWidth - replyLink.offsetLeft + 'px';
+	} else {
+		cloneReply.style.left = replyLink.offsetLeft + 'px';
+	}
 
 	document.body.appendChild(cloneReply);
 };

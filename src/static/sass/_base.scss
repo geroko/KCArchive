@@ -17,6 +17,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	word-break: break-word;
+	position: relative;
 }
 
 @media only screen and (max-width: 600px) {
