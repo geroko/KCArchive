@@ -7,6 +7,7 @@ from src import app, db, basic_auth
 from src.models import Thread, Post, File, Report
 from src.forms import SearchForm, ReportForm
 from src.utils import get_ip_address
+from src.search import search_posts
 
 @app.route('/media/<filename>')
 def get_media(filename):
@@ -32,9 +33,9 @@ def search():
 @app.route('/search/', defaults={'page_num':1})
 @app.route('/search/<int:page_num>/')
 def search_results(page_num):
-	form = SearchForm()
+	form = SearchForm(formdata=request.args, meta={'csrf':False})
 	if form.validate():
-		posts = form.get_results()
+		posts = search_posts(**form.data)
 		posts = posts.paginate(page=page_num, per_page=30, error_out=False)
 
 		return render_template('search.html', form=form, posts=posts, title="Search Results", query=request.args)

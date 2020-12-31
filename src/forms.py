@@ -26,39 +26,7 @@ class SearchForm(FlaskForm):
 	end_date = DateField(validators=[Optional()])
 	filename = StringField(validators=[Optional()])
 	orig_name = StringField(validators=[Optional()])
-	submit = SubmitField()
 
-	# Get data from url args if formdata is empty, disable csrf check
-	def __init__(self, *args, **kwargs):
-		if 'formdata' not in kwargs:
-			kwargs['formdata'] = request.args
-		if 'csrf_enabled' not in kwargs:
-			kwargs['csrf_enabled'] = False
-		super(SearchForm, self).__init__(*args, **kwargs)
-
-	def get_results(self):
-		posts = Post.query.group_by(Post.post_num).order_by(Post.date.desc())
-		if self.post_num.data:
-			posts = posts.filter(Post.post_num == self.post_num.data)
-		if self.subject.data:
-			posts = posts.filter(Post.subject.contains(self.subject.data))
-		if self.message.data:
-			posts = posts.filter(Post.message.contains(self.message.data))
-		if self.flag.data != 'Show All':
-			posts = posts.filter(Post.flag == self.flag.data)
-		if self.is_op.data == True:
-			posts = posts.filter(Post.is_op == True)
-		if self.banned.data == True:
-			posts = posts.filter(Post.ban_message != None)
-		if self.start_date.data:
-			posts = posts.filter(Post.date > self.start_date.data)
-		if self.end_date.data:
-			posts = posts.filter(Post.date < self.end_date.data)
-		if self.filename.data:
-			posts = posts.join(Post.files_contained).filter(File.filename.contains(self.filename.data))
-		if self.orig_name.data:
-			posts = posts.join(Post.files_contained).filter(File.orig_name.contains(self.orig_name.data))
-		return posts
 
 def report_cooldown(form, submit):
 	ip = sha256(get_ip_address().encode('utf-8')).hexdigest()
