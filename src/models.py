@@ -70,8 +70,10 @@ class File(db.Model):
 	def delete_file(self):
 		with open(app.config['BLACKLIST_FILE'], 'a') as f:
 			f.write(self.filename + '\n')
+
 		path = os.path.join(app.config['MEDIA_FOLDER'], self.filename)
-		os.remove(path)
+		if os.path.exists(path):
+			os.remove(path)
 
 	@property
 	def cropped_title(self):
