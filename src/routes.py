@@ -47,10 +47,6 @@ def report(post_num):
 	post = Post.query.get_or_404(post_num)
 	form = ReportForm()
 	if form.validate_on_submit():
-		report = Report.query.filter_by(token=form.csrf_token.data).first()
-		if report:
-			return redirect(request.referrer)
-
 		ip = sha256(get_ip_address().encode('utf-8')).hexdigest()
 		report = Report(ip=ip, reason=form.reason.data, token=form.csrf_token.data, post=post)
 		db.session.add(report)
@@ -62,9 +58,14 @@ def report(post_num):
 
 @app.route('/stats')
 def stats():
-	flag_list = Post.query.with_entities(Post.flag, func.count(Post.flag)).group_by(Post.flag).order_by(func.count(Post.flag).desc()).all()
+	flag_list = db.session.query(Post.flag, func.count(Post.flag))\
+		.group_by(Post.flag)\
+		.order_by(func.count(Post.flag).desc()).all()
 	
-	most_posted = File.query.filter(File.filename != 'audioGenericThumb.png', File.filename != 'genericThumb.png').with_entities(File.filename, func.count(File.filename)).group_by(File.filename).order_by(func.count(File.filename).desc()).limit(100)
+	most_posted = db.session.query(File.filename, func.count(File.filename))\
+		.filter(File.filename != 'audioGenericThumb.png', File.filename != 'genericThumb.png')\
+		.group_by(File.filename)\
+		.order_by(func.count(File.filename).desc()).limit(100)
 
 	return render_template('stats.html', flag_list=flag_list, most_posted=most_posted, title='Stats', FLAG_MAP=app.config['FLAG_MAP'])
 
@@ -72,19 +73,19 @@ def stats():
 @basic_auth.required
 def admin():
 	session['admin'] = True
-	reports = Report.query.filter_by(dismissed=0).order_by(Report.date.desc()).all()
+	reports = Report.query.filter(Report.dismissed == False).order_by(Report.date.desc()).all()
 	return render_template('admin.html', reports=reports)
 
 @app.route('/delete_file/<file_id>', methods=['POST'])
 @basic_auth.required
 def delete_file(file_id):
 	file = File.query.get_or_404(file_id)
-	reports = Report.query.filter_by(post=file.post).all()
-	
+	reports = Report.query.filter(Report.post == file.post, Report.dismissed == False).all()
+
 	file.delete_file()
 
 	for report in reports:
-		report.dismissed = 1
+		report.dismissed = True
 	db.session.commit()
 
 	flash(f'File: {file.cropped_title} deleted.')
@@ -94,13 +95,13 @@ def delete_file(file_id):
 @basic_auth.required
 def delete_files(post_num):
 	post = Post.query.get_or_404(post_num)
-	reports = Report.query.filter_by(post=post).all()
-	
+	reports = Report.query.filter(Report.post == post, Report.dismissed == False).all()
+
 	for file in post.files_contained:
 		file.delete_file()
 
 	for report in reports:
-		report.dismissed = 1
+		report.dismissed = True
 	db.session.commit()
 
 	flash(f'Files: {", ".join([file.cropped_title for file in post.files_contained])} deleted.')
@@ -109,18 +110,20 @@ def delete_files(post_num):
 @app.route('/dismiss_all', methods=['POST'])
 @basic_auth.required
 def dismiss_all():
-	reports = Report.query.filter_by(dismissed=0).all()
+	reports = Report.query.filter(Report.dismissed == False).all()
 	for report in reports:
-		report.dismissed = 1
+		report.dismissed = True
 	db.session.commit()
+
 	return redirect(request.referrer)
 
 @app.route('/dismiss/<report_id>', methods=['POST'])
 @basic_auth.required
 def dismiss(report_id):
 	report = Report.query.get_or_404(report_id)
-	report.dismissed = 1
+	report.dismissed = True
 	db.session.commit()
+
 	return redirect(request.referrer)
 
 @app.route('/about')

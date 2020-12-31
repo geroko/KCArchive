@@ -30,7 +30,7 @@ class SearchForm(FlaskForm):
 
 def report_cooldown(form, submit):
 	ip = sha256(get_ip_address().encode('utf-8')).hexdigest()
-	reports = Report.query.filter_by(ip=ip, dismissed=0).order_by(Report.date.desc()).limit(4)
+	reports = Report.query.filter(Report.ip == ip, Report.dismissed == False).order_by(Report.date.desc()).limit(4)
 	counter = 0
 	for report in reports:
 		if datetime.utcnow() - report.date < timedelta(minutes=5):
@@ -39,11 +39,9 @@ def report_cooldown(form, submit):
 			raise ValidationError('Wait before submitting more reports')
 
 def check_already_reported(form, submit):
-	post = Post.query.get(form.post_num.data)
-	report = Report.query.filter_by(post=post, dismissed=0).first()
+	report = Report.query.filter(Report.post_reported == form.post_num.data, Report.dismissed == False).first()
 	if report:
 		raise ValidationError('Post has already been reported')
-
 
 class ReportForm(FlaskForm):
 	post_num = HiddenField()
