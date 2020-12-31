@@ -55,25 +55,32 @@ a {
     font-weight: 300;
     letter-spacing: .25rem;
     padding: 0 1.5rem; }
-  .header__nav {
-    font-size: 1.7rem;
-    display: flex;
-    align-self: stretch; }
-  .header__nav-item {
+
+.top-nav {
+  font-size: 1.7rem;
+  display: flex;
+  align-self: stretch;
+  flex-grow: 1; }
+  .top-nav__item {
     display: flex;
     align-items: center;
     padding: 1.5rem 2.5rem;
     transition: all .2s; }
-    .header__nav-item:hover {
+    .top-nav__item:hover {
       background-color: #444; }
+    .top-nav__item--theme {
+      padding: 0 1rem;
+      margin-left: auto; }
 
 @media only screen and (max-width: 768px) {
   .header {
     display: block; }
-    .header__nav-item {
-      padding: 1.5rem 0;
+    .header .top-nav__item {
+      padding: 1rem 0;
       flex: 1;
-      justify-content: center; } }
+      justify-content: center; }
+      .header .top-nav__item--theme {
+        display: none; } }
 
 .catalog {
   display: grid;

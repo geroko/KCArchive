@@ -1,0 +1,27 @@
+:root {
+	--color-background: #1e1e1e;
+	--color-border: #555;
+	--color-primary: #333;
+	--color-secondary: #555;
+	--color-text: lightgrey;
+}
+
+.post a, .site-info a {
+	color: white !important;
+}
+
+input, select, textarea {
+	background-color: #eee;
+}
+
+.spoiler:hover {
+	color: lightgrey !important;
+}
+
+.greentext {
+	color: limegreen !important;
+}
+
+.site-info {
+	background-color: var(--color-background);
+}

@@ -7,6 +7,9 @@
 	<title>KC Archive</title>
 	{% endif %}
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+	{% if session.get('theme') == 'dark' %}
+	<link rel="stylesheet" type="text/css" href="/static/dark.css">
+	{% endif %}
 	<link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -14,11 +17,16 @@
 	
 	<header class="header">
 		<span class="header__logo">KC /int/ Archive</span>
-		<nav class="header__nav">
-			<a class="header__nav-item" href="{{url_for('catalog')}}">Catalog</a>
-			<a class="header__nav-item" href="{{url_for('search')}}">Search</a>
-			<a class="header__nav-item" href="{{url_for('stats')}}">Stats</a>
-			<a class="header__nav-item" href="{{url_for('about')}}">About</a>
+		<nav class="top-nav">
+			<a class="top-nav__item" href="{{url_for('catalog')}}">Catalog</a>
+			<a class="top-nav__item" href="{{url_for('search')}}">Search</a>
+			<a class="top-nav__item" href="{{url_for('stats')}}">Stats</a>
+			<a class="top-nav__item" href="{{url_for('about')}}">About</a>
+			{% if session.get('theme') == 'dark' %}
+			<a class="top-nav__item top-nav__item--theme" href="{{url_for('change_theme')}}"><img src="{{url_for('static', filename='icons/sun.png')}}"></a>
+			{% else %}
+			<a class="top-nav__item top-nav__item--theme" href="{{url_for('change_theme')}}"><img src="{{url_for('static', filename='icons/moon.png')}}"></a>
+			{% endif %}
 		</nav>
 	</header>
 

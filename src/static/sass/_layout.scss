@@ -14,14 +14,15 @@
 		letter-spacing: .25rem;
 		padding: 0 1.5rem;
 	}
+}
 
-	&__nav {
-		font-size: 1.7rem;
-		display: flex;
-		align-self: stretch;
-	}
+.top-nav {
+	font-size: 1.7rem;
+	display: flex;
+	align-self: stretch;
+	flex-grow: 1;
 
-	&__nav-item {
+	&__item {
 		display: flex;
 		align-items: center;
 		padding: 1.5rem 2.5rem;
@@ -30,6 +31,11 @@
 		&:hover {
 			background-color: #444;
 		}
+
+		&--theme {
+			padding: 0 1rem;
+			margin-left: auto;
+		}
 	}
 }
 
@@ -37,10 +43,14 @@
 	.header {
 		display: block;
 
-		&__nav-item {
-			padding: 1.5rem 0;
+		.top-nav__item {
+			padding: 1rem 0;
 			flex: 1;
 			justify-content: center;
+
+			&--theme {
+				display: none;
+			}
 		}
 	}
 }

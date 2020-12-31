@@ -128,3 +128,12 @@ def about():
 @app.route('/')
 def index():
 	return redirect(url_for('catalog'))
+
+@app.route('/change_theme')
+def change_theme():
+	if session.get('theme', None) == 'dark':
+		session.pop('theme')
+	else:
+		session['theme'] = 'dark'
+
+	return redirect(request.referrer)
