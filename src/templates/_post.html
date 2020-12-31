@@ -7,7 +7,7 @@
 {% endif %}
 	<div class="post__header">
 		{% if post.flag %}
-			<img src="{{url_for('static', filename='flags/' + post.flag)}}" title="{{post.get_flag_name()}}">
+			<img src="{{url_for('static', filename='flags/' + post.flag)}}" title="{{post.flag_name}}">
 		{% endif %}
 		{% if post.mod %}
 		<span class="mod-label">{{post.mod}}</span>
@@ -15,7 +15,7 @@
 		{% if post.subject %}
 			<span class="subject">{{post.subject|safe}}</span>
 		{% endif %}
-		<span title="{{post.get_timedelta()}}">{{post.date.strftime("%Y-%m-%d %H:%M:%S")}}</span>
+		<span title="{{post.timedelta}}">{{post.date.strftime("%Y-%m-%d %H:%M:%S")}}</span>
 		<a href="{{url_for('thread', thread_num=post.parent_thread, _anchor=post.post_num)}}" style="margin-right: auto;">#{{post.post_num}}</a>
 	
 		<a href="{{url_for('report', post_num=post.post_num)}}">Report</a>
@@ -43,8 +43,8 @@
 			{% for file in post.files_contained %}
 			<div class="post__image-container">
 				<div>
-					<p title="{{file.orig_name}}">{{file.get_cropped_title()}}</p>
-					<span>{{file.get_formatted_size()}}</span>
+					<p title="{{file.orig_name}}">{{file.cropped_title}}</p>
+					<span>{{file.formatted_size}}</span>
 					{% if file.dimensions %}
 						<span> {{file.dimensions}}</span>
 					{% endif %}

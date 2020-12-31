@@ -9,7 +9,8 @@ class Thread(db.Model):
 	posts_contained = db.relationship('Post', backref='thread')
 	total_posts = db.Column(db.Integer)
 
-	def get_title(self):
+	@property
+	def title(self):
 		if self.posts_contained[0].subject:
 			return self.posts_contained[0].subject[:50]
 		else:
@@ -30,14 +31,17 @@ class Post(db.Model):
 	reports_submitted = db.relationship('Report', backref='post')
 	markdown = db.Column(db.String)
 
-	def get_formatted_message(self):
+	@property
+	def formatted_message(self):
 		return format_message(self.message)
 
-	def get_timedelta(self):
+	@property
+	def timedelta(self):
 		td = datetime.utcnow() - self.date
 		return f'Posted {format_timedelta(td)} ago'
-	
-	def get_flag_name(self):
+
+	@property
+	def flag_name(self):
 		return app.config['FLAG_MAP'].get(self.flag, 'Not Available')
 
 	def get_replies(self, posts):
@@ -62,7 +66,8 @@ class File(db.Model):
 		path = os.path.join(app.config['MEDIA_FOLDER'], self.filename)
 		os.remove(path)
 
-	def get_cropped_title(self):
+	@property
+	def cropped_title(self):
 		if len(self.orig_name) > 15:
 			name, ext = os.path.splitext(self.orig_name)
 			return name[:15] + '[...]' + ext
@@ -74,9 +79,8 @@ class File(db.Model):
 			if self.filename in [line.strip('\n') for line in f]:
 				return True
 
-	def get_formatted_size(self):
-		if str(self.size).endswith(('B', 'KB', 'MB')):
-			return self.size
+	@property
+	def formatted_size(self):
 		return format_bytes(self.size)
 
 

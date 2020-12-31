@@ -23,7 +23,7 @@ def catalog(page_num):
 def thread(thread_num):
 	thread = Thread.query.get_or_404(thread_num)
 	posts = Post.query.filter(Post.thread == thread).all()
-	return render_template('thread.html', posts=posts, title=thread.get_title())
+	return render_template('thread.html', posts=posts, title=thread.title)
 
 @app.route('/search')
 def search():
