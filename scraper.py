@@ -1,6 +1,6 @@
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import logging
 
 import requests
@@ -24,7 +24,7 @@ def scrape_catalog(url):
 	time.sleep(1)
 	if res.status_code == 200:
 		catalog = res.json()
-		for thread in tqdm(catalog):
+		for thread in tqdm(catalog[::-1]): # Reverse direction to scrape oldest threads first
 			try:
 				thread_url = f"https://kohlchan.net/int/res/{thread['threadId']}.json"
 				scrape_thread(thread_url)
@@ -65,6 +65,11 @@ def scrape_thread(url):
 	return
 
 def scrape_post(post_json, thread_orm, is_op=False):
+	# If post is < 1 hour old, return
+	date = dateutil.parser.isoparse(post_json['creation'])
+	if datetime.now(timezone.utc) - date < timedelta(hours=1):
+		return
+
 	if is_op == True:  # OP post uses different key for post number
 		post_num = post_json['threadId']
 	else:
@@ -81,7 +86,6 @@ def scrape_post(post_json, thread_orm, is_op=False):
 	if subject == None: # Set None subjects to blank string so search works
 		subject = ''
 
-	date = dateutil.parser.isoparse(post_json['creation'])
 	mod = post_json['signedRole']
 	try:
 		flag = post_json['flag'].split('/')[-1]
