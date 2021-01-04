@@ -52,7 +52,7 @@ def format_message(message):
 	formatted = re.sub(r'\n', r'<br>', formatted)
 
 	formatted = bleach.clean(formatted, tags=['br', 'a', 'span', 'b', 'i', 'code', 'u', 's'], attributes=['class', 'id', 'href'])
-	formatted = bleach.linkify(formatted)
+	formatted = bleach.linkify(formatted, callbacks=[])
 	
 	return formatted
 
