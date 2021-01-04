@@ -1,7 +1,7 @@
 import re
 import bleach
 
-from flask import request
+from flask import request, url_for
 
 def format_timedelta(td):
 	days, remainder = divmod(int(td.total_seconds()), 86400)
@@ -55,3 +55,9 @@ def format_message(message):
 	formatted = bleach.linkify(formatted)
 	
 	return formatted
+
+def referrer_or_index():
+	if request.referrer != None:
+		return request.referrer
+	else:
+		return url_for('index')

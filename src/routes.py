@@ -6,7 +6,7 @@ from sqlalchemy import func
 from src import app, db, basic_auth
 from src.models import Thread, Post, File, Report
 from src.forms import SearchForm, ReportForm
-from src.utils import get_ip_address
+from src.utils import get_ip_address, referrer_or_index
 from src.search import search_posts
 
 @app.route('/media/<filename>')
@@ -89,7 +89,7 @@ def delete_file(file_id):
 	db.session.commit()
 
 	flash(f'File: {file.cropped_title} deleted.')
-	return redirect(request.referrer)
+	return redirect(referrer_or_index())
 
 @app.route('/delete_files/<post_num>', methods=['POST'])
 @basic_auth.required
@@ -105,7 +105,7 @@ def delete_files(post_num):
 	db.session.commit()
 
 	flash(f'Files: {", ".join([file.cropped_title for file in post.files_contained])} deleted.')
-	return redirect(request.referrer)
+	return redirect(referrer_or_index())
 
 @app.route('/dismiss_all', methods=['POST'])
 @basic_auth.required
@@ -115,7 +115,7 @@ def dismiss_all():
 		report.dismissed = True
 	db.session.commit()
 
-	return redirect(request.referrer)
+	return redirect(referrer_or_index())
 
 @app.route('/dismiss/<report_id>', methods=['POST'])
 @basic_auth.required
@@ -124,7 +124,7 @@ def dismiss(report_id):
 	report.dismissed = True
 	db.session.commit()
 
-	return redirect(request.referrer)
+	return redirect(referrer_or_index())
 
 @app.route('/about')
 def about():
@@ -141,4 +141,4 @@ def change_theme():
 	else:
 		session['theme'] = 'dark'
 
-	return redirect(request.referrer)
+	return redirect(referrer_or_index())
