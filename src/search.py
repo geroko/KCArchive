@@ -1,4 +1,4 @@
-from src.models import Post
+from src.models import Post, File
 
 def search_posts(post_num, subject, message, flag, is_op, banned, start_date, end_date, filename, orig_name):
 	posts = Post.query.group_by(Post.post_num).order_by(Post.date.desc())
