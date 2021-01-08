@@ -32,10 +32,8 @@ def scrape_catalog(url):
 
 			except Exception as e:
 				print(f"Thread failed: {e}\n{thread}")
-				continue
 
 	logging.info(f'Finished: {datetime.utcnow()}')
-	return
 
 def scrape_thread(url):
 	res = requests.get(url, timeout=5)
@@ -64,12 +62,9 @@ def scrape_thread(url):
 
 			except Exception as e:
 				logging.error(f'Post failed: {e}\n{post}')
-				continue
 
 		thread_orm.total_posts = len(thread_orm.posts_contained)
 		db.session.commit()
-
-	return
 
 def scrape_post(post_json, thread_orm, is_op=False):
 	date = dateutil.parser.isoparse(post_json['creation'])
@@ -111,9 +106,6 @@ def scrape_post(post_json, thread_orm, is_op=False):
 
 		except Exception as e:
 			logging.error(f'File failed: {e}\n{file}')
-			continue
-
-	return
 
 def scrape_file(file_json, post_orm):
 	orig_name = file_json['originalName']
@@ -163,6 +155,6 @@ def purge_blacklisted_files():
 			for file in os.listdir(app.config['MEDIA_FOLDER']):
 				if file == line.strip('\n'):
 					os.remove(os.path.join(app.config['MEDIA_FOLDER'], file))
-	
+
 if __name__ == '__main__':
 	scrape_catalog('https://kohlchan.net/int/catalog.json')
