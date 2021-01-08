@@ -2,6 +2,7 @@ import os
 import time
 from datetime import datetime, timedelta, timezone
 import logging
+import threading
 
 import requests
 import dateutil.parser
@@ -142,14 +143,19 @@ def scrape_file(file_json, post_orm):
 	else:
 		file_url = f"https://kohlchan.net/.media/{filename}"
 
-	res = requests.get(file_url, timeout=5)
 	time.sleep(1)
-	if res.status_code == 200:
-		path = os.path.join(app.config['MEDIA_FOLDER'], filename)
-		with open(path, 'wb') as f:
-			f.write(res.content)
+	threading.Thread(target=save_file, args=[file_url, filename]).start()
 
-	return
+def save_file(file_url, filename):
+	try:
+		res = requests.get(file_url, timeout=5)
+		if res.status_code == 200:
+			path = os.path.join(app.config['MEDIA_FOLDER'], filename)
+			with open(path, 'wb') as f:
+				f.write(res.content)
+
+	except Exception as e:
+		logging.error(f'Media download failed: {filename}\n{e}')
 
 def purge_blacklisted_files():
 	with open(app.config['BLACKLIST_FILE'], 'r') as f:
