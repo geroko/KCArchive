@@ -16,7 +16,7 @@
 	{% for file in most_posted %}
 		<div class="most-posted__item">
 			<p>{{file[1]}} Reposts</p>
-			<img src="{{url_for('get_media', filename=file[0])}}">
+			<img src="{{url_for('get_media', filename=file[0])}}" onerror="this.src='/static/missing.png'">
 		</div>
 	{% endfor %}
 	</div>	
