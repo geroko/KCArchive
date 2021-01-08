@@ -41,6 +41,9 @@ def scrape_thread(url):
 	time.sleep(1)
 	if res.status_code == 200:
 		thread = res.json()
+		# Prevent empty threads from being saved
+		if datetime.now(timezone.utc) - dateutil.parser.isoparse(thread['creation']) < timedelta(minutes=app.config['SCRAPER_DELAY']):
+			return
 		posts = thread['posts']
 
 		# Try to get thread from db, else instantiate new Thread
