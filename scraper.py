@@ -44,6 +44,9 @@ def scrape_thread(url):
 		# Prevent empty threads from being saved
 		if datetime.now(timezone.utc) - dateutil.parser.isoparse(thread['creation']) < timedelta(minutes=app.config['SCRAPER_DELAY']):
 			return
+		# Check that thread hasn't been moved to another board
+		if thread['boardUri'] != 'int':
+			return
 		posts = thread['posts']
 
 		# Try to get thread from db, else instantiate new Thread
