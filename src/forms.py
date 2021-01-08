@@ -38,12 +38,11 @@ def report_cooldown(form, submit):
 		if counter > 2:
 			raise ValidationError('Wait before submitting more reports')
 
-def check_already_reported(form, submit):
-	report = Report.query.filter(Report.post_reported == form.post_num.data, Report.dismissed == False).first()
+def check_already_reported(form, post_num):
+	report = Report.query.filter(Report.post_reported == post_num.data).first()
 	if report:
 		raise ValidationError('Post has already been reported')
 
 class ReportForm(FlaskForm):
-	post_num = HiddenField()
+	post_num = HiddenField(validators=[check_already_reported])
 	reason = TextAreaField(validators=[DataRequired(), Length(max=250)])
-	submit = SubmitField(validators=[report_cooldown, check_already_reported])

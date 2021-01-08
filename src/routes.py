@@ -80,13 +80,13 @@ def admin():
 @basic_auth.required
 def delete_file(file_id):
 	file = File.query.get_or_404(file_id)
-	reports = Report.query.filter(Report.post == file.post, Report.dismissed == False).all()
+	report = Report.query.filter(Report.post == file.post, Report.dismissed == False).first()
 
 	file.delete_file()
 
-	for report in reports:
+	if report:
 		report.dismissed = True
-	db.session.commit()
+		db.session.commit()
 
 	flash(f'File: {file.cropped_title} deleted.')
 	return redirect(referrer_or_index())
@@ -95,14 +95,14 @@ def delete_file(file_id):
 @basic_auth.required
 def delete_files(post_num):
 	post = Post.query.get_or_404(post_num)
-	reports = Report.query.filter(Report.post == post, Report.dismissed == False).all()
+	report = Report.query.filter(Report.post == post, Report.dismissed == False).first()
 
 	for file in post.files_contained:
 		file.delete_file()
 
-	for report in reports:
+	if report:
 		report.dismissed = True
-	db.session.commit()
+		db.session.commit()
 
 	flash(f'Files: {", ".join([file.cropped_title for file in post.files_contained])} deleted.')
 	return redirect(referrer_or_index())

@@ -68,6 +68,9 @@ class File(db.Model):
 	parent_post = db.Column(db.Integer, db.ForeignKey('post.post_num'), nullable=False)
 
 	def delete_file(self):
+		if self.is_blacklisted:
+			return
+
 		with open(app.config['BLACKLIST_FILE'], 'a') as f:
 			f.write(self.filename + '\n')
 
@@ -83,10 +86,12 @@ class File(db.Model):
 		else:
 			return self.orig_name
 
-	def check_blacklisted(self):
+	@property
+	def is_blacklisted(self):
 		with open(app.config['BLACKLIST_FILE'], 'r') as f:
 			if self.filename in [line.strip('\n') for line in f]:
 				return True
+			return False
 
 	@property
 	def formatted_size(self):
