@@ -12,6 +12,9 @@ SECRET_KEY = os.urandom(16)
 MEDIA_FOLDER = os.path.join(basedir, 'media')
 BLACKLIST_FILE = os.path.join(basedir, 'blacklist.txt')
 
+# Posts newer than this will not be saved, in minutes
+SCRAPER_DELAY = 0
+
 '''
 Add posts to about page with syntax:
 {

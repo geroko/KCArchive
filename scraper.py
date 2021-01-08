@@ -65,9 +65,9 @@ def scrape_thread(url):
 	return
 
 def scrape_post(post_json, thread_orm, is_op=False):
-	# If post is < 1 hour old, return
 	date = dateutil.parser.isoparse(post_json['creation'])
-	if datetime.now(timezone.utc) - date < timedelta(hours=1):
+	# If post is < SCRAPER_DELAY minutes old, return
+	if datetime.now(timezone.utc) - date < timedelta(minutes=app.config['SCRAPER_DELAY']):
 		return
 
 	if is_op == True:  # OP post uses different key for post number
