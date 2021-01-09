@@ -178,7 +178,7 @@ FLAG_MAP = {
 	'mt.png':'Malta',
 	'xk.png':'Kosovo',
 	'vc.png':'Saint Vincent',
-	'ga.png':'Gabon'
+	'ga.png':'Gabon',
 	'unknown.png':'Unknown',
 	'kohl.png':'Moderator'
 }
