@@ -172,6 +172,13 @@ FLAG_MAP = {
 	'et.png':'Ethiopia',
 	'ni.png':'Nicaragua',
 	'mo.png':'Macao',
+	'py.png':'Paraguay',
+	'mm.png':'Myanmar',
+	'gy.png':'Guyana',
+	'mt.png':'Malta',
+	'xk.png':'Kosovo',
+	'vc.png':'Saint Vincent',
+	'ga.png':'Gabon'
 	'unknown.png':'Unknown',
 	'kohl.png':'Moderator'
 }
