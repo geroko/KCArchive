@@ -53,6 +53,9 @@ def scrape_thread(url):
 		if thread_orm == None:
 			thread_orm = Thread(thread_num=thread['threadId'])
 			db.session.add(thread_orm)
+		# If number of posts in thread is same as in database, return
+		elif len(posts) + 1 == thread_orm.total_posts:
+			return
 
 		scrape_post(thread, thread_orm, is_op=True)
 
