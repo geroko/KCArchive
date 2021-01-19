@@ -2,8 +2,8 @@
 	--color-background: #1e1e1e;
 	--color-border: #555;
 	--color-primary: #333;
-	--color-secondary: #555;
-	--color-text: lightgrey;
+	--color-secondary: #222;
+	--color-text: #eee;
 }
 
 .post a, .site-info a {
@@ -23,5 +23,9 @@ input, select, textarea {
 }
 
 .site-info {
-	background-color: var(--color-background);
+	background-color: var(--color-secondary);
+}
+
+.tr:hover {
+	background-color: #555;
 }
