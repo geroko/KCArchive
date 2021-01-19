@@ -61,13 +61,14 @@ def stats():
 	flag_list = db.session.query(Post.flag, func.count(Post.flag))\
 		.group_by(Post.flag)\
 		.order_by(func.count(Post.flag).desc()).all()
-	
+	flag_list = [(f[0], f[1], app.config['FLAG_MAP'].get(f[0], f[0])) for f in flag_list]
+
 	most_posted = db.session.query(File.filename, func.count(File.filename))\
 		.filter(File.filename != 'audioGenericThumb.png', File.filename != 'genericThumb.png')\
 		.group_by(File.filename)\
 		.order_by(func.count(File.filename).desc()).limit(100)
 
-	return render_template('stats.html', flag_list=flag_list, most_posted=most_posted, title='Stats', FLAG_MAP=app.config['FLAG_MAP'])
+	return render_template('stats.html', flag_list=flag_list, most_posted=most_posted, title='Stats')
 
 @app.route('/admin', methods=['GET', 'POST'])
 @basic_auth.required

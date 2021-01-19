@@ -49,7 +49,10 @@ class Post(db.Model):
 
 	@property
 	def flag_name(self):
-		return app.config['FLAG_MAP'].get(self.flag, 'Not Available')
+		try:
+			return app.config['FLAG_MAP'][self.flag]
+		except:
+			return self.flag
 
 	def get_replies(self, posts):
 		replies = []

@@ -179,6 +179,7 @@ FLAG_MAP = {
 	'xk.png':'Kosovo',
 	'vc.png':'Saint Vincent',
 	'ga.png':'Gabon',
+	'german_empire.png':'German Empire',
 	'unknown.png':'Unknown',
 	'kohl.png':'Moderator'
 }
