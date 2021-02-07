@@ -16,7 +16,7 @@ def get_media(filename):
 @app.route('/catalog/', defaults={'page_num':1})
 @app.route('/catalog/<int:page_num>')
 def catalog(page_num):
-	posts = Post.query.order_by(Post.date.desc()).filter(Post.is_op == True).paginate(page=page_num, per_page=50, error_out=False)
+	posts = Post.query.order_by(Post.post_num.desc()).filter(Post.is_op == True).paginate(page=page_num, per_page=50, error_out=False)
 	return render_template('catalog.html', posts=posts, title=f'Page {page_num}')
 
 @app.route('/thread/<int:thread_num>')
@@ -40,7 +40,7 @@ def search_results(page_num):
 
 		return render_template('search.html', form=form, posts=posts, title="Search Results", query=request.args)
 	return render_template('search.html', form=form, title="Search")
-	
+
 
 @app.route('/report/<post_num>', methods=['GET', 'POST'])
 def report(post_num):
@@ -51,7 +51,7 @@ def report(post_num):
 		report = Report(ip=ip, reason=form.reason.data, token=form.csrf_token.data, post=post)
 		db.session.add(report)
 		db.session.commit()
-			
+
 		flash(f'Post #{post.post_num} reported')
 		return redirect(url_for('thread', thread_num=post.thread.thread_num))
 	return render_template('report_form.html', post=post, form=form, title='Report')
