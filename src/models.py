@@ -6,7 +6,7 @@ from src.utils import format_timedelta, format_bytes, format_message
 
 class Thread(db.Model):
 	thread_num = db.Column(db.Integer, primary_key=True)
-	posts_contained = db.relationship('Post', backref='thread')
+	posts_contained = db.relationship('Post', backref='thread', cascade='delete')
 	total_posts = db.Column(db.Integer)
 
 	@property
@@ -20,8 +20,15 @@ class Thread(db.Model):
 	def post_count(self):
 		if self.total_posts == 1:
 			return '1 Post'
-
 		return f'{self.total_posts} Posts'
+
+	@classmethod
+	def get_or_create(cls, id):
+		thread = cls.query.get(id)
+		if not thread:
+			thread = cls(thread_num=id)
+			db.session.add(thread)
+		return thread
 
 
 class Post(db.Model):

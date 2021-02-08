@@ -26,59 +26,63 @@ def scrape_catalog(url):
 	if res.status_code == 200:
 		catalog = res.json()
 		for thread in tqdm(catalog[::-1]): # Reverse direction to scrape oldest threads first
+			db.session.rollback()
 			try:
+				# If thread is < SCRAPER_DELAY minutes old, continue
+				if datetime.now(timezone.utc) - dateutil.parser.isoparse(thread['creation']) < timedelta(minutes=app.config['SCRAPER_DELAY']):
+					continue
+
+				thread_orm = Thread.get_or_create(thread['threadId'])
+				# If number of posts in thread is same as in database, continue
+				if thread['postCount'] + 1 == thread_orm.total_posts:
+					continue
+
 				thread_url = f"https://kohlchan.net/int/res/{thread['threadId']}.json"
-				scrape_thread(thread_url)
+				scrape_thread(thread_url, thread_orm)
 
 			except Exception as e:
 				print(f"Thread failed: {e}\n{thread}")
 
 	logging.info(f'Finished: {datetime.utcnow()}')
 
-def scrape_thread(url):
+def scrape_thread(url, thread_orm=None):
 	res = requests.get(url, timeout=5)
 	time.sleep(1)
 	if res.status_code == 200:
 		thread = res.json()
-		# Prevent empty threads from being saved
-		if datetime.now(timezone.utc) - dateutil.parser.isoparse(thread['creation']) < timedelta(minutes=app.config['SCRAPER_DELAY']):
-			return
 		# Check that thread hasn't been moved to another board
 		if thread['boardUri'] != 'int':
 			return
-		posts = thread['posts']
 
-		# Try to get thread from db, else instantiate new Thread
-		thread_orm = Thread.query.get(thread['threadId'])
-		if thread_orm == None:
-			thread_orm = Thread(thread_num=thread['threadId'])
-			db.session.add(thread_orm)
-		# If number of posts in thread is same as in database, return
-		elif len(posts) + 1 == thread_orm.total_posts:
-			return
+		if not thread_orm:
+			thread_orm = Thread.get_or_create(thread['threadId'])
 
-		scrape_post(thread, thread_orm, is_op=True)
-
+		posts = [{k:v for k,v in thread.items() if k != 'posts'}] + thread['posts']
 		for post in posts:
 			try:
-				scrape_post(post, thread_orm, is_op=False)
-
+				scrape_post(post, thread_orm)
 			except Exception as e:
 				logging.error(f'Post failed: {e}\n{post}')
 
 		thread_orm.total_posts = len(thread_orm.posts_contained)
-		db.session.commit()
+		if thread_orm.total_posts == 0:
+			db.session.rollback()
+		else:
+			db.session.commit()
 
-def scrape_post(post_json, thread_orm, is_op=False):
+def scrape_post(post_json, thread_orm):
+	is_op = False
+
 	date = dateutil.parser.isoparse(post_json['creation'])
 	# If post is < SCRAPER_DELAY minutes old, return
 	if datetime.now(timezone.utc) - date < timedelta(minutes=app.config['SCRAPER_DELAY']):
 		return
 
-	if is_op == True:  # OP post uses different key for post number
-		post_num = post_json['threadId']
-	else:
+	try:
 		post_num = post_json['postId']
+	except:
+		post_num = post_json['threadId']
+		is_op = True
 
 	ban_message = post_json.get('banMessage', None)
 
@@ -87,26 +91,23 @@ def scrape_post(post_json, thread_orm, is_op=False):
 		post_orm.ban_message = ban_message
 		return
 
-	subject = post_json['subject']
-	if subject == None: # Set None subjects to blank string so search works
-		subject = ''
-
 	mod = post_json['signedRole']
 	try:
 		flag = post_json['flag'].split('/')[-1]
 	except:
 		flag = None
+
+	subject = post_json['subject']
 	message = post_json['message']
-	files = post_json['files']
 	markdown = format_message(message)
 
 	post_orm = Post(flag=flag, date=date, post_num=post_num, subject=subject, mod=mod, message=message, is_op=is_op, thread=thread_orm, ban_message=ban_message, markdown=markdown)
 	db.session.add(post_orm)
 
+	files = post_json['files']
 	for file in files:
 		try:
 			scrape_file(file, post_orm)
-
 		except Exception as e:
 			logging.error(f'File failed: {e}\n{file}')
 
@@ -148,7 +149,6 @@ def save_file(file_url, filename):
 			path = os.path.join(app.config['MEDIA_FOLDER'], filename)
 			with open(path, 'wb') as f:
 				f.write(res.content)
-
 	except Exception as e:
 		logging.error(f'Media download failed: {filename}\n{e}')
 
