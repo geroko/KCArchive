@@ -38,22 +38,24 @@ def format_message(message):
 	formatted = re.sub(r'(&gt;&gt;(\d+))', r'<a href="#\2" class="reply-link">\1</a>', formatted)
 	formatted = re.sub(r'^(&gt;.*)$', r'<span class="greentext">\1</span>', formatted, flags=re.MULTILINE)
 	formatted = re.sub(r'^(&lt;.*)$', r'<span class="orangetext">\1</span>', formatted, flags=re.MULTILINE)
-	formatted = re.sub(r'\[spoiler\](.*)\[/spoiler\]', r'<span class="spoiler">\1</span>', formatted)
-	formatted = re.sub(r'\*\*(.*)\*\*', r'<span class="spoiler">\1</span>', formatted)
-	formatted = re.sub(r'==(.*)==', r'<span class="redtext">\1</span>', formatted)
-	formatted = re.sub(r'\[b\](.*)\[/b\]', r'<b>\1</b>', formatted)
-	formatted = re.sub(r'\'\'\'(.*)\'\'\'', r'<b>\1</b>', formatted)
-	formatted = re.sub(r'\[i\](.*)\[/i\]', r'<i>\1</i>', formatted)
-	formatted = re.sub(r'\[code\](.*)\[/code\]', r'<code>\1</code>', formatted, flags=re.DOTALL)
-	formatted = re.sub(r'\[u\](.*)\[/u\]', r'<u>\1</u>', formatted)
-	formatted = re.sub(r'__(.*)__', r'<u>\1</u>', formatted)
-	formatted = re.sub(r'\[s\](.*)\[/s\]', r'<s>\1</s>', formatted)
-	formatted = re.sub(r'~~(.*)~~', r'<s>\1</s>', formatted)
+	formatted = re.sub(r'\[spoiler\](.+?)\[/spoiler\]', r'<span class="spoiler">\1</span>', formatted, flags=re.DOTALL)
+	formatted = re.sub(r'\*\*(.+?)\*\*', r'<span class="spoiler">\1</span>', formatted)
+	formatted = re.sub(r'==(.+?)==', r'<span class="redtext">\1</span>', formatted)
+	formatted = re.sub(r'\[b\](.+?)\[/b\]', r'<b>\1</b>', formatted, flags=re.DOTALL)
+	formatted = re.sub(r'\'\'\'(.+?)\'\'\'', r'<b>\1</b>', formatted)
+	formatted = re.sub(r'\[i\](.+?)\[/i\]', r'<i>\1</i>', formatted, flags=re.DOTALL)
+	formatted = re.sub(r'\[code\](.+?)\[/code\]', r'<code>\1</code>', formatted, flags=re.DOTALL)
+	formatted = re.sub(r'\[u\](.+?)\[/u\]', r'<u>\1</u>', formatted, flags=re.DOTALL)
+	formatted = re.sub(r'__(.+?)__', r'<u>\1</u>', formatted)
+	formatted = re.sub(r'\[s\](.+?)\[/s\]', r'<s>\1</s>', formatted, flags=re.DOTALL)
+	formatted = re.sub(r'~~(.+?)~~', r'<s>\1</s>', formatted)
+	formatted = re.sub(r'\[quote\](.+?)\[/quote\]', r'<span class="greentext">\1</span>', formatted, flags=re.DOTALL)
 	formatted = re.sub(r'\n', r'<br>', formatted)
+	formatted = re.sub(r'\r', r'', formatted)
 
 	formatted = bleach.clean(formatted, tags=['br', 'a', 'span', 'b', 'i', 'code', 'u', 's'], attributes=['class', 'id', 'href'])
 	formatted = bleach.linkify(formatted, callbacks=[])
-	
+
 	return formatted
 
 def referrer_or_index():
