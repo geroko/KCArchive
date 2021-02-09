@@ -1,4 +1,4 @@
-document.querySelectorAll('.post__reply, .reply-link').forEach(replyLink => {
+document.querySelectorAll('.post__reply, .quoteLink').forEach(replyLink => {
 	replyLink.addEventListener('mouseenter', function() {
 		renderReply(replyLink.text.slice(2), replyLink);
 	});

@@ -15,10 +15,10 @@ input, select, textarea {
 }
 
 .spoiler:hover {
-	color: lightgrey !important;
+	color: #eee !important;
 }
 
-.greentext {
+.greenText {
 	color: limegreen !important;
 }
 
