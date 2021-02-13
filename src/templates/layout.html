@@ -22,12 +22,17 @@
 			<a class="top-nav__item" href="{{url_for('search')}}">Search</a>
 			<a class="top-nav__item" href="{{url_for('stats')}}">Stats</a>
 			<a class="top-nav__item" href="{{url_for('about')}}">About</a>
-			{% if session.get('theme') == 'dark' %}
-			<a class="top-nav__item top-nav__item--theme" href="{{url_for('change_theme')}}"><img src="{{url_for('static', filename='icons/sun.png')}}"></a>
-			{% else %}
-			<a class="top-nav__item top-nav__item--theme" href="{{url_for('change_theme')}}"><img src="{{url_for('static', filename='icons/moon.png')}}"></a>
-			{% endif %}
 		</nav>
+
+		{% if session.get('theme') == 'dark' %}
+		<form class="change-theme" action="{{url_for('change_theme')}}" title="Change Theme" method="POST">
+			<input type="image" src="{{url_for('static', filename='icons/sun.png')}}">
+		</form>
+		{% else %}
+		<form class="change-theme" action="{{url_for('change_theme')}}" title="Change Theme" method="POST">
+			<input type="image" src="{{url_for('static', filename='icons/moon.png')}}">
+		</form>
+		{% endif %}
 	</header>
 
 	{% with messages = get_flashed_messages() %}

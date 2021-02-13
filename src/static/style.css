@@ -68,19 +68,26 @@ a {
     transition: all .2s; }
     .top-nav__item:hover {
       background-color: #444; }
-    .top-nav__item--theme {
-      padding: 0 1rem;
-      margin-left: auto; }
+
+.change-theme {
+  display: flex; }
+  .change-theme input[type="image"] {
+    padding: 8px; }
+    .change-theme input[type="image"]:focus {
+      outline: none; }
+  .change-theme:hover {
+    background-color: #444; }
+
 
 @media only screen and (max-width: 768px) {
   .header {
     display: block; }
-    .header .top-nav__item {
-      padding: 1rem 0;
-      flex: 1;
-      justify-content: center; }
-      .header .top-nav__item--theme {
-        display: none; } }
+  .top-nav__item {
+    padding: 1rem 0;
+    flex: 1;
+    justify-content: center; }
+  .change-theme {
+    display: none; } }
 
 .catalog {
   display: grid;

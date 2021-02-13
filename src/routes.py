@@ -135,11 +135,10 @@ def about():
 def index():
 	return redirect(url_for('catalog'))
 
-@app.route('/change_theme')
+@app.route('/change_theme', methods=['POST'])
 def change_theme():
 	if session.get('theme', None) == 'dark':
 		session.pop('theme')
 	else:
 		session['theme'] = 'dark'
-
 	return redirect(referrer_or_index())

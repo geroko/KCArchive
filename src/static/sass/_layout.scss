@@ -31,27 +31,40 @@
 		&:hover {
 			background-color: #444;
 		}
+	}
+}
 
-		&--theme {
-			padding: 0 1rem;
-			margin-left: auto;
+.change-theme {
+	display: flex;
+
+	& input[type="image"] {
+		padding: 8px;
+
+		&:focus {
+			outline: none;
 		}
 	}
+
+	&:hover {
+		background-color: #444;
+	}
+}
+
 }
 
 @media only screen and (max-width: 768px) {
 	.header {
 		display: block;
+	}
 
-		.top-nav__item {
-			padding: 1rem 0;
-			flex: 1;
-			justify-content: center;
+	.top-nav__item {
+		padding: 1rem 0;
+		flex: 1;
+		justify-content: center;
+	}
 
-			&--theme {
-				display: none;
-			}
-		}
+	.change-theme {
+		display: none;
 	}
 }
 

@@ -10,7 +10,7 @@
 	color: white !important;
 }
 
-input, select, textarea {
+input[type="text"], input[type="checkbox"], input[type="date"], select, textarea {
 	background-color: #eee;
 }
 
