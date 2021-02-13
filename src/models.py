@@ -34,16 +34,16 @@ class Thread(db.Model):
 class Post(db.Model):
 	post_num = db.Column(db.Integer, primary_key=True)
 	date = db.Column(db.DateTime)
-	subject = db.Column(db.String, default='')
-	message = db.Column(db.String)
-	flag = db.Column(db.String)
-	mod = db.Column(db.String, default=None)
+	subject = db.Column(db.String(255))
+	message = db.Column(db.Text)
+	flag = db.Column(db.String(255))
+	mod = db.Column(db.String(255), default=None)
 	is_op = db.Column(db.Boolean, default=False)
-	ban_message = db.Column(db.String, default=None)
+	ban_message = db.Column(db.String(255), default=None)
 	parent_thread = db.Column(db.Integer, db.ForeignKey('thread.thread_num'), nullable=False)
 	files_contained = db.relationship('File', backref='post', cascade='delete', lazy='subquery')
 	reports_submitted = db.relationship('Report', backref='post')
-	markdown = db.Column(db.String)
+	markdown = db.Column(db.Text)
 
 	@property
 	def formatted_message(self):
@@ -71,10 +71,10 @@ class Post(db.Model):
 
 class File(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	filename = db.Column(db.String)
-	orig_name = db.Column(db.String)
+	filename = db.Column(db.String(255))
+	orig_name = db.Column(db.Text)
 	size = db.Column(db.Integer)
-	dimensions = db.Column(db.String)
+	dimensions = db.Column(db.String(255))
 	parent_post = db.Column(db.Integer, db.ForeignKey('post.post_num'), nullable=False)
 
 	def delete_file(self):
@@ -110,9 +110,9 @@ class File(db.Model):
 
 class Report(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	ip = db.Column(db.String, nullable=False)
+	ip = db.Column(db.String(255), nullable=False)
 	date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-	reason = db.Column(db.String, nullable=False)
-	token = db.Column(db.String, nullable=False)
+	reason = db.Column(db.Text, nullable=False)
+	token = db.Column(db.String(255), nullable=False)
 	dismissed = db.Column(db.Boolean, default=False)
 	post_reported = db.Column(db.Integer, db.ForeignKey('post.post_num'))

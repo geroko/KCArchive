@@ -1,3 +1,4 @@
+from src import app, db
 from src.models import Post, File
 
 def search_posts(post_num, subject, message, flag, is_op, banned, start_date, end_date, filename, orig_name):
@@ -5,9 +6,15 @@ def search_posts(post_num, subject, message, flag, is_op, banned, start_date, en
 	if post_num:
 		posts = posts.filter(Post.post_num == post_num)
 	if subject:
-		posts = posts.filter(Post.subject.contains(subject))
+		if db.engine.name == 'sqlite':
+			posts = posts.filter(Post.subject.contains(subject))
+		else:
+			posts = posts.filter(Post.subject.match(subject))
 	if message:
-		posts = posts.filter(Post.message.contains(message))
+		if db.engine.name == 'sqlite':
+			posts = posts.filter(Post.message.contains(message))
+		else:
+			posts = posts.filter(Post.message.match(message))
 	if flag != 'Show All':
 		posts = posts.filter(Post.flag == flag)
 	if is_op == True:

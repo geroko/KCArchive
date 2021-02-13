@@ -8,6 +8,7 @@ BASIC_AUTH_USERNAME = 'admin'
 BASIC_AUTH_PASSWORD = 'changeme'
 
 SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, 'kcarchive.db')
+#SQLALCHEMY_DATABASE_URI = 'mysql+mysqldb://user:pass@localhost/kcarchive?charset=utf8mb4'
 SECRET_KEY = os.urandom(16)
 MEDIA_FOLDER = os.path.join(basedir, 'media')
 BLACKLIST_FILE = os.path.join(basedir, 'blacklist.txt')
