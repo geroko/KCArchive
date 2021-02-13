@@ -41,6 +41,12 @@
 		{% endif %}
 	</header>
 
+	{% if g.banner %}
+		<div class="banner">
+			{{g.banner}}
+		</div>
+	{% endif %}
+
 	{% with messages = get_flashed_messages() %}
 		{% if messages %}
 		<div class="flashed-message">

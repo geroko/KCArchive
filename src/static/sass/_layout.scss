@@ -74,6 +74,14 @@
 	}
 }
 
+.banner {
+	text-align: center;
+	padding: 3px;
+	background-color: royalblue;
+	color: white;
+	box-shadow: 0 .2rem 1rem rgba(0,0,0,.25);	
+}
+
 @media only screen and (max-width: 1000px) {
 	.search-bar {
 		display: none;

@@ -1,6 +1,6 @@
 from hashlib import sha256
 
-from flask import render_template, url_for, send_from_directory, flash, redirect, request, session
+from flask import render_template, url_for, send_from_directory, flash, redirect, request, session, g
 from sqlalchemy import func
 
 from src import app, db, basic_auth
@@ -12,6 +12,10 @@ from src.search import search_posts
 @app.route('/media/<filename>')
 def get_media(filename):
 	return send_from_directory(app.config['MEDIA_FOLDER'], filename, attachment_filename=filename + '.png')
+
+@app.before_request
+def get_banner_message():
+	g.banner = app.config['BANNER']
 
 @app.route('/catalog/', defaults={'page_num':1})
 @app.route('/catalog/<int:page_num>')
