@@ -49,7 +49,8 @@ a {
   background-color: var(--color-header);
   box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.25);
   color: white;
-  text-align: center; }
+  text-align: center;
+  justify-content: space-between; }
   .header__logo {
     font-size: 2.8rem;
     font-weight: 300;
@@ -59,8 +60,7 @@ a {
 .top-nav {
   font-size: 1.7rem;
   display: flex;
-  align-self: stretch;
-  flex-grow: 1; }
+  align-self: stretch; }
   .top-nav__item {
     display: flex;
     align-items: center;
@@ -78,6 +78,26 @@ a {
   .change-theme:hover {
     background-color: #444; }
 
+.search-bar {
+  display: flex;
+  width: 25%; }
+  .search-bar input[type="text"] {
+    padding: 5px;
+    flex-grow: 1;
+    border: 1px solid grey; }
+  .search-bar input[type="submit"] {
+    cursor: pointer;
+    padding: 0 10px;
+    border: 1px solid grey;
+    border-left: none;
+    background-color: lightgrey;
+    transition: all .2s; }
+    .search-bar input[type="submit"]:hover {
+      background-color: grey; }
+
+@media only screen and (max-width: 1000px) {
+  .search-bar {
+    display: none; } }
 
 @media only screen and (max-width: 768px) {
   .header {

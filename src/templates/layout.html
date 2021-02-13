@@ -24,6 +24,12 @@
 			<a class="top-nav__item" href="{{url_for('about')}}">About</a>
 		</nav>
 
+		<form class="search-bar" action="{{url_for('search_results')}}" method="GET">
+			<input type="hidden" name="flag" value="Show All">
+			<input type="text" name="message" value="" placeholder="Search all posts...">
+			<input type="submit" name="" value="Submit">
+		</form>
+
 		{% if session.get('theme') == 'dark' %}
 		<form class="change-theme" action="{{url_for('change_theme')}}" title="Change Theme" method="POST">
 			<input type="image" src="{{url_for('static', filename='icons/sun.png')}}">

@@ -7,6 +7,7 @@
 	box-shadow: 0 .2rem 1rem rgba(0,0,0,.25);
 	color: white;
 	text-align: center;
+	justify-content: space-between;
 
 	&__logo {
 		font-size: 2.8rem;
@@ -20,7 +21,6 @@
 	font-size: 1.7rem;
 	display: flex;
 	align-self: stretch;
-	flex-grow: 1;
 
 	&__item {
 		display: flex;
@@ -50,6 +50,34 @@
 	}
 }
 
+.search-bar {
+	display: flex;
+	width: 25%;
+
+	& input[type="text"] {
+		padding: 5px;
+		flex-grow: 1;
+		border: 1px solid grey;
+	}
+
+	& input[type="submit"] {
+		cursor: pointer;
+		padding: 0 10px;
+		border: 1px solid grey;
+		border-left: none;
+		background-color: lightgrey;
+		transition: all .2s;
+
+		&:hover {
+			background-color: grey;
+		}
+	}
+}
+
+@media only screen and (max-width: 1000px) {
+	.search-bar {
+		display: none;
+	}
 }
 
 @media only screen and (max-width: 768px) {
