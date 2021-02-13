@@ -12,7 +12,7 @@
 
 	<a href="{{url_for('thread', thread_num=post.post_num)}}">
 		{% if post.files_contained %}
-		<img class="catalog-thread__image" src="{{url_for('get_media', filename=post.files_contained[0].filename)}}" onerror="this.src='/static/missing.png'">
+			<img class="catalog-thread__image" src="{{url_for('get_media', filename=post.files_contained[0].filename)}}" onerror="this.src='/static/missing.png'">
 		{% endif %}
 	</a>
 

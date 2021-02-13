@@ -10,14 +10,14 @@
 			<img src="{{url_for('static', filename='flags/' + post.flag)}}" title="{{post.flag_name}}" onerror="this.src='/static/icons/x.png'">
 		{% endif %}
 		{% if post.mod %}
-		<span class="mod-label">{{post.mod}}</span>
+			<span class="mod-label">{{post.mod}}</span>
 		{% endif %}
 		{% if post.subject %}
 			<span class="subject">{{post.subject|safe}}</span>
 		{% endif %}
 		<span title="{{post.timedelta}}">{{post.date.strftime("%Y-%m-%d %H:%M:%S")}}</span>
 		<a href="{{url_for('thread', thread_num=post.parent_thread, _anchor=post.post_num)}}" style="margin-right: auto;">#{{post.post_num}}</a>
-	
+
 		<a href="{{url_for('report', post_num=post.post_num)}}">Report</a>
 		{% if session.get('admin', None) and post.files_contained %}
 		<form action="{{url_for('delete_files', post_num=post.post_num)}}" method="POST">
@@ -31,7 +31,7 @@
 			<a href="#{{reply}}" class="post__reply">&gt;&gt;{{reply}}</a>
 		{% endfor %}
 	</div>
-	
+
 	{% if post.files_contained.__len__() > 1 %}
 	<div class="post__content" style="flex-direction: column;">
 	{% else %}
@@ -51,7 +51,7 @@
 				</div>
 				<a href="{{url_for('get_media', filename=file.filename)}}">
 					<img src="{{url_for('get_media', filename=file.filename)}}" onerror="this.src='/static/missing.png'">
-				</a>	
+				</a>
 				{% if session.get('admin', None) %}
 				<form action="{{url_for('delete_file', file_id=file.id)}}" method="POST">
 					<input type="submit" name="" value="Delete File">
