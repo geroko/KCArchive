@@ -16,7 +16,22 @@ def search_posts(post_num, subject, message, flag, is_op, banned, start_date, en
 		else:
 			posts = posts.filter(Post.message.match(message))
 	if flag != 'Show All':
-		posts = posts.filter(Post.flag == flag)
+		if flag == 'us.png':
+			posts = posts.filter(Post.flag.in_(['us.png'] + [k for k in app.config['STATE_FLAGS'].keys()]))
+		elif flag == 'de.png':
+			posts = posts.filter(Post.flag.in_(['de.png', '204.png', 'german_empire.png']))
+		elif flag == 'it.png':
+			posts = posts.filter(Post.flag.in_(['it.png', 'it-204.png']))
+		elif flag == 'jp.png':
+			posts = posts.filter(Post.flag.in_(['jp.png', 'jp-204.png']))
+		elif flag == 'ru.png':
+			posts = posts.filter(Post.flag.in_(['ru.png', 'su.png']))
+		elif flag == 'fr.png':
+			posts = posts.filter(Post.flag.in_(['fr.png'] + [k for k in app.config['FRENCH_FLAGS'].keys()]))
+		elif flag == 'by.png':
+			posts = posts.filter(Post.flag.in_(['by.png', 'by-luke.png', 'by-25march']))
+		else:
+			posts = posts.filter(Post.flag == flag)
 	if is_op == True:
 		posts = posts.filter(Post.is_op == True)
 	if banned == True:

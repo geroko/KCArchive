@@ -6,7 +6,7 @@ from sqlalchemy import func
 from src import app, db, basic_auth
 from src.models import Thread, Post, File, Report
 from src.forms import SearchForm, ReportForm
-from src.utils import get_ip_address, referrer_or_index
+from src.utils import get_ip_address, referrer_or_index, concat_dicts
 from src.search import search_posts
 
 @app.route('/media/<filename>')
@@ -65,13 +65,13 @@ def stats():
 	flag_list = db.session.query(Post.flag, func.count(Post.flag))\
 		.group_by(Post.flag)\
 		.order_by(func.count(Post.flag).desc()).all()
-	flag_list = [(f[0], f[1], app.config['FLAG_MAP'].get(f[0], f[0])) for f in flag_list]
+	flags = concat_dicts(app.config['FLAG_MAP'], app.config['STATE_FLAGS'], app.config['MISC_FLAGS'], app.config['FRENCH_FLAGS'])
+	flag_list = [{'label':f[0], 'name':flags.get(f[0], f[0]), 'count':f[1]} for f in flag_list]
 
 	most_posted = db.session.query(File.filename, func.count(File.filename))\
 		.filter(File.filename != 'audioGenericThumb.png', File.filename != 'genericThumb.png')\
 		.group_by(File.filename)\
 		.order_by(func.count(File.filename).desc()).limit(100)
-
 	return render_template('stats.html', flag_list=flag_list, most_posted=most_posted, title='Stats')
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -119,7 +119,6 @@ def dismiss_all():
 	for report in reports:
 		report.dismissed = True
 	db.session.commit()
-
 	return redirect(referrer_or_index())
 
 @app.route('/dismiss/<report_id>', methods=['POST'])
@@ -128,7 +127,6 @@ def dismiss(report_id):
 	report = Report.query.get_or_404(report_id)
 	report.dismissed = True
 	db.session.commit()
-
 	return redirect(referrer_or_index())
 
 @app.route('/about')

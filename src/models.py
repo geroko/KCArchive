@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 from src import app, db
-from src.utils import format_timedelta, format_bytes, format_message
+from src.utils import format_timedelta, format_bytes, format_message, concat_dicts
 
 class Thread(db.Model):
 	thread_num = db.Column(db.Integer, primary_key=True)
@@ -56,8 +56,9 @@ class Post(db.Model):
 
 	@property
 	def flag_name(self):
+		flags = concat_dicts(app.config['FLAG_MAP'], app.config['STATE_FLAGS'], app.config['MISC_FLAGS'], app.config['FRENCH_FLAGS'])
 		try:
-			return app.config['FLAG_MAP'][self.flag]
+			return flags[self.flag]
 		except:
 			return self.flag
 

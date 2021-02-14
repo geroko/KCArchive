@@ -63,3 +63,10 @@ def referrer_or_index():
 		return request.referrer
 	else:
 		return url_for('index')
+
+def concat_dicts(*args, **kwargs):
+	dict = {}
+	for arg in args:
+		dict.update(arg)
+	dict.update(kwargs)
+	return dict
