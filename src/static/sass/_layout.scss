@@ -26,7 +26,7 @@
 		display: flex;
 		align-items: center;
 		padding: 1.5rem 2.5rem;
-		transition: all .2s;
+		transition: background-color .2s;
 
 		&:hover {
 			background-color: #444;
@@ -66,7 +66,7 @@
 		border: 1px solid grey;
 		border-left: none;
 		background-color: lightgrey;
-		transition: all .2s;
+		transition: background-color .2s;
 
 		&:hover {
 			background-color: grey;
@@ -79,7 +79,7 @@
 	padding: 3px;
 	background-color: royalblue;
 	color: white;
-	box-shadow: 0 .2rem 1rem rgba(0,0,0,.25);	
+	box-shadow: 0 .2rem 1rem rgba(0,0,0,.25);
 }
 
 @media only screen and (max-width: 1000px) {
@@ -215,7 +215,7 @@
 	background-color: var(--color-primary);
 	border: 1px solid var(--color-border);
 	margin: 20px;
-	max-width: 850px;
+	max-width: 1000px;
 	min-height: 200px;
 	align-self: center;
 
