@@ -17,7 +17,7 @@ def search_posts(post_num, subject, message, flag, is_op, banned, start_date, en
 			posts = posts.filter(Post.message.contains(message))
 		else:
 			posts = posts.filter(Post.message.match(message))
-	if flag != 'Show All':
+	if flag and flag != 'Show All':
 		if flag == 'us.png':
 			posts = posts.filter(Post.flag.in_(['us.png'] + [k for k in app.config['STATE_FLAGS'].keys()]))
 		elif flag == 'de.png':

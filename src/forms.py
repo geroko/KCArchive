@@ -21,7 +21,7 @@ class SearchForm(FlaskForm):
 	message = StringField(validators=[Optional()])
 	is_op = BooleanField()
 	banned = BooleanField()
-	flag = SelectField(choices=[('Show All', 'Show All')] + [f for f in app.config['FLAG_MAP'].items()])
+	flag = SelectField(choices=[('Show All', 'Show All')] + [f for f in app.config['FLAG_MAP'].items()], validators=[Optional()])
 	start_date = DateField(validators=[Optional()])
 	end_date = DateField(validators=[Optional()])
 	filename = StringField(validators=[Optional()])
