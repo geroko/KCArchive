@@ -1,8 +1,10 @@
+from sqlalchemy.orm import lazyload
+
 from src import app, db
 from src.models import Post, File
 
 def search_posts(post_num, subject, message, flag, is_op, banned, start_date, end_date, filename, orig_name):
-	posts = Post.query.order_by(Post.post_num.desc())
+	posts = Post.query
 	if post_num:
 		posts = posts.filter(Post.post_num == post_num)
 	if subject:
@@ -36,12 +38,18 @@ def search_posts(post_num, subject, message, flag, is_op, banned, start_date, en
 		posts = posts.filter(Post.is_op == True)
 	if banned == True:
 		posts = posts.filter(Post.ban_message != None)
+	if start_date or end_date:
+		posts = posts.order_by(Post.date.desc())
+	else:
+		posts = posts.order_by(Post.post_num.desc())
 	if start_date:
 		posts = posts.filter(Post.date > start_date)
 	if end_date:
 		posts = posts.filter(Post.date < end_date)
 	if filename or orig_name:
 		posts = posts.group_by(Post.post_num)
+	else:
+		posts = posts.options(lazyload(Post.files_contained))
 	if filename:
 		posts = posts.join(Post.files_contained).filter(File.filename.contains(filename))
 	if orig_name:
