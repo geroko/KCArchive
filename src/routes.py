@@ -1,7 +1,10 @@
 from hashlib import sha256
+from math import ceil
 
 from flask import render_template, url_for, send_from_directory, flash, redirect, request, session, g
 from sqlalchemy import func
+from sqlalchemy.orm import lazyload
+from flask_sqlalchemy import Pagination
 
 from src import app, db, basic_auth
 from src.models import Thread, Post, File, Report
@@ -20,7 +23,12 @@ def get_banner_message():
 @app.route('/catalog/', defaults={'page_num':1})
 @app.route('/catalog/<int:page_num>')
 def catalog(page_num):
-	posts = Post.query.order_by(Post.post_num.desc()).filter(Post.is_op == True).paginate(page=page_num, per_page=50, error_out=False)
+	count = db.session.query(Post.post_num).filter(Post.is_op == True).count()
+	if page_num > ceil(count / 50):
+		return redirect(url_for('index'))
+	upper_bound = db.session.query(Post.post_num).filter(Post.is_op == True).order_by(Post.post_num.desc()).offset((page_num - 1) * 50).first()[0]
+	items = Post.query.filter(Post.post_num <= upper_bound, Post.is_op == True).order_by(Post.post_num.desc()).options(lazyload(Post.files_contained)).limit(50)
+	posts = Pagination(query=None, page=page_num, per_page=50, total=count, items=items)
 	return render_template('catalog.html', posts=posts, title=f'Page {page_num}')
 
 @app.route('/thread/<int:thread_num>')

@@ -2,7 +2,7 @@
 
 {% extends 'layout.html' %}
 {% block content %}
-	
+
 	<h1 class="page-title">Page {{posts.page}}</h1>
 
 	<div class="catalog">
@@ -14,5 +14,5 @@
 	</div>
 
 	{{ paginator('catalog', posts) }}
-	
+
 {% endblock %}
