@@ -50,9 +50,10 @@ def search_results(page_num):
 		results = search_posts(**form.data)
 		count = results.with_entities(Post.post_num).count()
 		if page_num > ceil(count / 30):
-			return redirect(url_for('search_results', **request.args))
-		upper_bound = results.with_entities(Post.post_num).offset((page_num - 1) * 30).first()[0]
-		items = results.filter(Post.post_num <= upper_bound).limit(30)
+			items = []
+		else:
+			upper_bound = results.with_entities(Post.post_num).offset((page_num - 1) * 30).first()[0]
+			items = results.filter(Post.post_num <= upper_bound).limit(30)
 		posts = Pagination(query=None, page=page_num, per_page=30, total=count, items=items)
 
 		return render_template('search.html', form=form, posts=posts, title="Search Results", query=request.args)
