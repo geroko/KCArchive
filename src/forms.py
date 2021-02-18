@@ -17,8 +17,8 @@ def prevent_blank_search(form, submit):
 
 class SearchForm(FlaskForm):
 	post_num = IntegerField(validators=[Optional()])
-	subject = StringField(validators=[Optional()])
-	message = StringField(validators=[Optional()])
+	subject = StringField(validators=[Optional(), Length(min=3, message='Subject field must be 3 or more characters.')])
+	message = StringField(validators=[Optional(), Length(min=3, message='Message field must be 3 or more characters.')])
 	is_op = BooleanField()
 	banned = BooleanField()
 	flag = SelectField(choices=[('Show All', 'Show All')] + [f for f in app.config['FLAG_MAP'].items()], validators=[Optional()])
