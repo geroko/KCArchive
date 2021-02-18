@@ -32,11 +32,14 @@ def search_posts(post_num, subject, message, flag, is_op, banned, start_date, en
 	if end_date:
 		posts = posts.filter(Post.date < end_date)
 	if filename or orig_name:
-		posts = posts.group_by(Post.post_num)
+		posts = posts.join(Post.files_contained).group_by(Post.post_num)
 	else:
 		posts = posts.options(lazyload(Post.files_contained))
 	if filename:
-		posts = posts.join(Post.files_contained).filter(File.filename.contains(filename))
+		posts = posts.filter(File.filename == 't_' + filename)
 	if orig_name:
-		posts = posts.join(Post.files_contained).filter(File.orig_name.contains(orig_name))
+		if db.engine.name == 'sqlite':
+			posts = posts.filter(File.orig_name.contains(orig_name))
+		else:
+			posts = posts.filter(File.orig_name.match(orig_name))
 	return posts
