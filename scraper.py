@@ -21,7 +21,7 @@ with open(app.config['BLACKLIST_FILE']) as f:
 def scrape_catalog(url):
 	logging.info(f'\nStarted: {datetime.utcnow()}')
 
-	res = requests.get(url, timeout=5)
+	res = requests.get(url, timeout=5, allow_redirects=False)
 	time.sleep(1)
 	if res.status_code == 200:
 		catalog = res.json()
@@ -46,13 +46,10 @@ def scrape_catalog(url):
 	logging.info(f'Finished: {datetime.utcnow()}')
 
 def scrape_thread(url, thread_orm=None):
-	res = requests.get(url, timeout=5)
+	res = requests.get(url, timeout=5, allow_redirects=False)
 	time.sleep(1)
 	if res.status_code == 200:
 		thread = res.json()
-		# Check that thread hasn't been moved to another board
-		if thread['boardUri'] != 'int':
-			return
 
 		if not thread_orm:
 			thread_orm = Thread.get_or_create(thread['threadId'])
@@ -144,7 +141,7 @@ def scrape_file(file_json, post_orm):
 
 def save_file(file_url, filename):
 	try:
-		res = requests.get(file_url, timeout=5)
+		res = requests.get(file_url, timeout=5, allow_redirects=False)
 		if res.status_code == 200:
 			path = os.path.join(app.config['MEDIA_FOLDER'], filename)
 			with open(path, 'wb') as f:
