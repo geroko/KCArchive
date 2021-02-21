@@ -45,6 +45,7 @@ def format_message(message):
 	formatted = re.sub(r'\'\'\'(.+?)\'\'\'', r'<b>\1</b>', formatted)
 	formatted = re.sub(r'\[i\](.+?)\[/i\]', r'<i>\1</i>', formatted, flags=re.DOTALL)
 	formatted = re.sub(r'\[code\](.+?)\[/code\]', r'<code>\1</code>', formatted, flags=re.DOTALL)
+	formatted = re.sub(r'\`\`\`(.+?)\`\`\`', r'<code>\1</code>', formatted, flags=re.DOTALL)
 	formatted = re.sub(r'\[u\](.+?)\[/u\]', r'<u>\1</u>', formatted, flags=re.DOTALL)
 	formatted = re.sub(r'__(.+?)__', r'<u>\1</u>', formatted)
 	formatted = re.sub(r'\[s\](.+?)\[/s\]', r'<s>\1</s>', formatted, flags=re.DOTALL)
