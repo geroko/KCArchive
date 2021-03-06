@@ -26,6 +26,7 @@ class SearchForm(FlaskForm):
 	end_date = DateField(validators=[Optional()])
 	filename = StringField(validators=[Optional()])
 	orig_name = StringField(validators=[Optional()])
+	order = SelectField(choices=[('desc', 'Date Descending'), ('asc', 'Date Ascending')], validators=[Optional()])
 
 
 def report_cooldown(form, submit):
