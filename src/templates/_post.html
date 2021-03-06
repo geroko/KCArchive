@@ -7,7 +7,7 @@
 {% endif %}
 	<div class="post__header">
 		{% if post.flag %}
-			<img src="{{url_for('static', filename='flags/' + post.flag)}}" title="{{post.flag_name}}" onerror="this.src='/static/icons/x.png'">
+			<img src="{{url_for('static', filename='flags/' + post.flag)}}" title="{{post.get_flag_name}}" onerror="this.src='/static/icons/x.png'">
 		{% endif %}
 		{% if post.mod %}
 			<span class="mod-label">{{post.mod}}</span>

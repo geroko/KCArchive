@@ -88,17 +88,24 @@ def scrape_post(post_json, thread_orm):
 		post_orm.ban_message = ban_message
 		return
 
-	mod = post_json['signedRole']
 	try:
 		flag = post_json['flag'].split('/')[-1]
+		if post_json['flag'].split('/')[-2] == 'vsa':
+			flag = 'us-' + flag
+		flag_name = post_json['flagName']
 	except:
 		flag = None
+		flag_name = None
 
+	mod = post_json['signedRole']
+	email = post_json['email']
 	subject = post_json['subject']
 	message = post_json['message']
 	markdown = format_message(message)
 
-	post_orm = Post(flag=flag, date=date, post_num=post_num, subject=subject, mod=mod, message=message, is_op=is_op, thread=thread_orm, ban_message=ban_message, markdown=markdown)
+	post_orm = Post(post_num=post_num, date=date, flag=flag, flag_name=flag_name,\
+		subject=subject, message=message, markdown=markdown, is_op=is_op,\
+		email=email, mod=mod, ban_message=ban_message, thread=thread_orm)
 	db.session.add(post_orm)
 
 	files = post_json['files']

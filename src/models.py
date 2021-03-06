@@ -34,9 +34,11 @@ class Thread(db.Model):
 class Post(db.Model):
 	post_num = db.Column(db.Integer, primary_key=True)
 	date = db.Column(db.DateTime)
+	email = db.Column(db.String(255))
 	subject = db.Column(db.String(255))
 	message = db.Column(db.Text)
 	flag = db.Column(db.String(255))
+	flag_name = db.Column(db.String(255))
 	mod = db.Column(db.String(255), default=None)
 	is_op = db.Column(db.Boolean, default=False)
 	ban_message = db.Column(db.String(255), default=None)
@@ -55,7 +57,9 @@ class Post(db.Model):
 		return f'Posted {format_timedelta(td)} ago'
 
 	@property
-	def flag_name(self):
+	def get_flag_name(self):
+		if self.flag_name:
+			return self.flag_name
 		flags = concat_dicts(app.config['FLAG_MAP'], app.config['STATE_FLAGS'], app.config['MISC_FLAGS'], app.config['FRENCH_FLAGS'])
 		try:
 			return flags[self.flag]
