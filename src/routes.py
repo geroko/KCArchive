@@ -6,7 +6,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import lazyload
 from flask_sqlalchemy import Pagination
 
-from src import app, db, basic_auth
+from src import app, db, basic_auth, cache
 from src.models import Thread, Post, File, Report
 from src.forms import SearchForm, ReportForm
 from src.utils import get_ip_address, referrer_or_index, concat_dicts
@@ -75,6 +75,7 @@ def report(post_num):
 	return render_template('report_form.html', post=post, form=form, title='Report')
 
 @app.route('/stats')
+@cache.cached(timeout=1800)
 def stats():
 	flag_list = db.session.query(Post.flag, func.count(Post.flag))\
 		.group_by(Post.flag)\

@@ -12,6 +12,7 @@ SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, 'kcarchive.db')
 SECRET_KEY = os.urandom(16)
 MEDIA_FOLDER = os.path.join(basedir, 'media')
 BLACKLIST_FILE = os.path.join(basedir, 'blacklist.txt')
+CACHE_TYPE = 'simple'
 
 # Posts newer than this will not be saved, in minutes
 SCRAPER_DELAY = 0
