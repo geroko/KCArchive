@@ -1,6 +1,8 @@
 import os
 from datetime import datetime
 
+from sqlalchemy.dialects.postgresql import TSVECTOR
+
 from src import app, db
 from src.utils import format_timedelta, format_bytes, format_message, concat_dicts
 
@@ -46,6 +48,8 @@ class Post(db.Model):
 	files_contained = db.relationship('File', backref='post', cascade='delete', lazy='subquery')
 	reports_submitted = db.relationship('Report', backref='post')
 	markdown = db.Column(db.Text)
+	tsv_message = db.Column(TSVECTOR)
+	tsv_subject = db.Column(TSVECTOR)
 
 	@property
 	def formatted_message(self):

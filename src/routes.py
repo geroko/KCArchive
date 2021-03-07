@@ -23,10 +23,10 @@ def get_banner_message():
 @app.route('/catalog/', defaults={'page_num':1})
 @app.route('/catalog/<int:page_num>')
 def catalog(page_num):
-	count = db.session.query(Post.post_num).filter(Post.is_op == True).count()
+	count = Thread.query.count()
 	if page_num > ceil(count / 50):
-		return redirect(url_for('index'))
-	upper_bound = db.session.query(Post.post_num).filter(Post.is_op == True).order_by(Post.post_num.desc()).offset((page_num - 1) * 50).first()[0]
+		return redirect(url_for('catalog'))
+	upper_bound = Thread.query.order_by(Thread.thread_num.desc()).offset((page_num - 1) * 50).first().thread_num
 	items = Post.query.filter(Post.post_num <= upper_bound, Post.is_op == True).order_by(Post.post_num.desc()).options(lazyload(Post.files_contained)).limit(50)
 	posts = Pagination(query=None, page=page_num, per_page=50, total=count, items=items)
 	return render_template('catalog.html', posts=posts, title=f'Page {page_num}')
@@ -34,7 +34,7 @@ def catalog(page_num):
 @app.route('/thread/<int:thread_num>')
 def thread(thread_num):
 	thread = Thread.query.get_or_404(thread_num)
-	posts = Post.query.filter(Post.thread == thread).all()
+	posts = Post.query.filter(Post.thread == thread).order_by(Post.post_num).all()
 	return render_template('thread.html', posts=posts, title=thread.title)
 
 @app.route('/search')

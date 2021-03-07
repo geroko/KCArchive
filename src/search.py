@@ -1,4 +1,5 @@
 from sqlalchemy.orm import lazyload
+from sqlalchemy.sql import text
 
 from src import app, db
 from src.models import Post, File
@@ -12,15 +13,9 @@ def search_posts(post_num, subject, message, flag, is_op, banned, start_date, en
 	if post_num:
 		posts = posts.filter(Post.post_num == post_num)
 	if subject:
-		if db.engine.name == 'sqlite':
-			posts = posts.filter(Post.subject.contains(subject))
-		else:
-			posts = posts.filter(Post.subject.match(subject))
+		posts = posts.filter(text(f"tsv_subject @@ websearch_to_tsquery(:subject)").params(subject=subject))
 	if message:
-		if db.engine.name == 'sqlite':
-			posts = posts.filter(Post.message.contains(message))
-		else:
-			posts = posts.filter(Post.message.match(message))
+		posts = posts.filter(text(f"tsv_message @@ websearch_to_tsquery(:message)").params(message=message))
 	if flag and flag != 'Show All':
 		posts = posts.filter(Post.flag == flag)
 	if is_op == True:
@@ -38,8 +33,5 @@ def search_posts(post_num, subject, message, flag, is_op, banned, start_date, en
 	if filename:
 		posts = posts.filter(File.filename == 't_' + filename)
 	if orig_name:
-		if db.engine.name == 'sqlite':
-			posts = posts.filter(File.orig_name.contains(orig_name))
-		else:
-			posts = posts.filter(File.orig_name.match(orig_name))
+		posts = posts.filter(File.orig_name.contains(orig_name))
 	return posts
