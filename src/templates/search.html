@@ -10,17 +10,26 @@
 	{{ render_errors(form.errors) }}
 
 {% if posts %}
-	<h1 class="page-title">{{posts.total}} Results - Page {{posts.page}}</h1>
+	<h1 class="page-title">{#{{posts.total}} Results - #}Page {{page_num}}</h1>
 
 	<div class="search-results">
-	{% for post in posts.items %}
+	{% for post in posts %}
 
 		{{ render_post(post) }}
 
 	{% endfor %}
 	</div>
 
-	{{ paginator('search_results', posts, query) }}
+	<div class="paginator">
+		{% if page_num <= 1 %}
+			<a href="{{url_for('search_results', page_num=1, **query)}}" class="paginator__item">&lt;</a>
+		{% else %}
+			<a href="{{url_for('search_results', page_num=page_num - 1, **query)}}" class="paginator__item">&lt;</a>
+		{% endif %}
+		<a href="{{url_for('search_results', page_num=page_num + 1, **query)}}" class="paginator__item">&gt;</a>
+	</div>
+
+	{#{{ paginator('search_results', posts, query) }}#}
 
 {% endif %}
 

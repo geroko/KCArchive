@@ -41,7 +41,7 @@ def thread(thread_num):
 def search():
 	form = SearchForm()
 	return render_template('search.html', form=form, title='Search')
-
+'''
 @app.route('/search/', defaults={'page_num':1})
 @app.route('/search/<int:page_num>/')
 def search_results(page_num):
@@ -58,7 +58,20 @@ def search_results(page_num):
 
 		return render_template('search.html', form=form, posts=posts, title="Search Results", query=request.args)
 	return render_template('search.html', form=form, title="Search")
-
+'''
+@app.route('/search/', defaults={'page_num':1})
+@app.route('/search/<int:page_num>')
+def search_results(page_num):
+	form = SearchForm(formdata=request.args, meta={'csrf':False})
+	if form.validate():
+		results = search_posts(**form.data)
+		offset = (page_num - 1) * 30
+		if offset > 5000 or offset < 0:
+			offset = 0
+			page_num = 1
+		posts = results.offset(offset).limit(30)
+		return render_template('search.html', form=form, posts=posts, title="Search Results", query=request.args, page_num=page_num)
+	return render_template('search.html', form=form, title="Search")
 
 @app.route('/report/<post_num>', methods=['GET', 'POST'])
 def report(post_num):
