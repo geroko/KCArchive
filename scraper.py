@@ -1,6 +1,6 @@
 import os
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import logging
 import threading
 
@@ -29,7 +29,7 @@ def scrape_catalog(url):
 			db.session.rollback()
 			try:
 				# If thread is < SCRAPER_DELAY minutes old, continue
-				if datetime.now(timezone.utc) - dateutil.parser.isoparse(thread['creation']) < timedelta(minutes=app.config['SCRAPER_DELAY']):
+				if datetime.utcnow() - dateutil.parser.isoparse(thread['creation']).replace(tzinfo=None) < timedelta(minutes=app.config['SCRAPER_DELAY']):
 					continue
 
 				thread_orm = Thread.get_or_create(thread['threadId'])
@@ -70,9 +70,9 @@ def scrape_thread(url, thread_orm=None):
 def scrape_post(post_json, thread_orm):
 	is_op = False
 
-	date = dateutil.parser.isoparse(post_json['creation'])
+	date = dateutil.parser.isoparse(post_json['creation']).replace(tzinfo=None)
 	# If post is < SCRAPER_DELAY minutes old, return
-	if datetime.now(timezone.utc) - date < timedelta(minutes=app.config['SCRAPER_DELAY']):
+	if datetime.utcnow() - date < timedelta(minutes=app.config['SCRAPER_DELAY']):
 		return
 
 	try:
