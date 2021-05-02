@@ -401,9 +401,26 @@ a {
 .flashed-message {
   background-color: var(--color-primary);
   border: 1px solid var(--color-border);
-  margin: 1rem;
+  margin-top: 60px;
   padding: 1.5rem 2.5rem;
-  align-self: center; }
+  position: fixed;
+  animation: fadeOut 2s;
+  animation-delay: 3s;
+  animation-fill-mode: forwards;
+  right: 10px;
+  z-index: 1; }
+
+@keyframes fadeOut {
+  from {
+    opacity: 1; }
+  to {
+    opacity: 0; } }
+
+@media only screen and (max-width: 768px) {
+  .flashed-message {
+    right: unset;
+    margin-top: 80px;
+    align-self: center; } }
 
 .reply-preview {
   position: absolute;
