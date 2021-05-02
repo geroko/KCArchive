@@ -12,17 +12,26 @@ class Thread(db.Model):
 	total_posts = db.Column(db.Integer)
 
 	@property
-	def title(self):
-		if self.posts_contained[0].subject:
-			return self.posts_contained[0].subject[:50]
-		else:
-			return self.posts_contained[0].message[:50]
-
-	@property
 	def post_count(self):
 		if self.total_posts == 1:
 			return '1 Post'
 		return f'{self.total_posts} Posts'
+
+	@property
+	def op_post(self):
+		for post in self.posts_contained:
+			if post.is_op:
+				return post
+
+	@property
+	def title(self):
+		op = self.op_post
+		if op.subject:
+			return op.subject[:50]
+		elif op.message:
+			return op.message[:50]
+		else:
+			return op.post_num
 
 	@classmethod
 	def get_or_create(cls, id):
