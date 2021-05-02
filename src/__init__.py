@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_basicauth import BasicAuth
 from flask_migrate import Migrate
 from flask_caching import Cache
+from flask_session import Session
 
 app = Flask(__name__, instance_relative_config=True)
 
@@ -22,6 +23,7 @@ db = SQLAlchemy(app)
 basic_auth = BasicAuth(app)
 migrate = Migrate(app, db)
 cache = Cache(app)
+Session(app)
 
 if not os.path.isdir(app.config['MEDIA_FOLDER']):
 	os.mkdir(app.config['MEDIA_FOLDER'])
