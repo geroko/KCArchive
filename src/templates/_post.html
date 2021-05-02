@@ -16,9 +16,12 @@
 			<span class="subject">{{post.subject|safe}}</span>
 		{% endif %}
 		<span title="{{post.timedelta}}">{{post.date.strftime("%Y-%m-%d %H:%M:%S")}}</span>
-		<a href="{{url_for('thread', thread_num=post.parent_thread, _anchor=post.post_num)}}" style="margin-right: auto;">#{{post.post_num}}</a>
+		<a href="{{url_for('thread', thread_num=post.parent_thread, _anchor=post.post_num)}}">#{{post.post_num}}</a>
+		{% if post.email == 'sage' %}
+			<span class="ban-message">SÄGE!</span>
+		{% endif %}
 
-		<a href="{{url_for('report', post_num=post.post_num)}}">Report</a>
+		<a href="{{url_for('report', post_num=post.post_num)}}" style="margin-left: auto;">Report</a>
 		{% if session.get('admin', None) and post.files_contained %}
 		<form action="{{url_for('delete_files', post_num=post.post_num)}}" method="POST">
 			<input type="submit" name="" value="Delete All Files">

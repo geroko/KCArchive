@@ -287,8 +287,8 @@ a {
     padding: .5rem .5rem 0 .5rem;
     line-height: 2rem;
     flex-wrap: wrap; }
-    .post__header > *:not(:first-child) {
-      margin-left: .5rem; }
+    .post__header > *:not(:last-child) {
+      margin-right: 5px; }
   .post__replies {
     font-size: 1.1rem;
     padding: .2rem .4rem 0 .4rem; }

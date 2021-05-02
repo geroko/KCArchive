@@ -64,8 +64,8 @@
 		line-height: 2rem;
 		flex-wrap: wrap;
 
-		& > *:not(:first-child) {
-			margin-left: .5rem;
+		& > *:not(:last-child) {
+			margin-right: 5px;
 		}
 	}
 
