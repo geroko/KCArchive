@@ -140,15 +140,17 @@ a {
   flex-direction: column;
   align-items: flex-start;
   padding: 1.5rem 1rem; }
-  .thread__footer {
-    background-color: var(--color-header);
-    color: #eee;
-    margin-top: auto;
-    display: flex;
-    box-shadow: 0 -0.2rem 1rem rgba(0, 0, 0, 0.25); }
-  .thread__footer-link {
-    padding: .2rem .5rem; }
-    .thread__footer-link:hover {
+
+.footer {
+  background-color: var(--color-header);
+  color: #eee;
+  margin-top: auto;
+  display: flex;
+  box-shadow: 0 -0.2rem 1rem rgba(0, 0, 0, 0.25);
+  align-items: center; }
+  .footer > * {
+    padding: 2px 5px; }
+    .footer > *:hover {
       color: white; }
 
 .search-results {

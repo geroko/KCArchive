@@ -11,9 +11,8 @@
 		{% endfor %}
 	</div>
 
-	<footer class="thread__footer">
-		<a class="thread__footer-link" href="#">Go to Top</a>
-		<a class="thread__footer-link" href="{{url_for('catalog')}}">Return</a>
+	<footer class="footer" id="footer">
+		<span>Post Count: {{post_count}}</span>
 	</footer>
 
 	<script type="text/javascript" src="{{url_for('static', filename='js/replyPreview.js')}}"></script>
