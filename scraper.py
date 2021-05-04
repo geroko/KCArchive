@@ -13,59 +13,62 @@ from src import app, db
 from src.models import Post, Thread, File
 from src.utils import format_message
 
-logging.basicConfig(level=logging.INFO, filename='instance/kcarchive.log', format='%(message)s')
+logging.basicConfig(level=logging.WARNING, filename='instance/kcarchive.log', format='%(message)s')
 
 with open(app.config['BLACKLIST_FILE']) as f:
 	blacklist = [line.strip('\n') for line in f]
 
 def scrape_catalog(url):
-	logging.info(f'\nStarted: {datetime.utcnow()}')
+	logging.warning(f'\nStarted: {datetime.utcnow()}')
 
-	res = requests.get(url, timeout=5, allow_redirects=False)
-	time.sleep(1)
-	if res.status_code == 200:
-		catalog = res.json()
-		for thread in tqdm(catalog[::-1]): # Reverse direction to scrape oldest threads first
-			db.session.rollback()
-			try:
-				# If thread is < SCRAPER_DELAY minutes old, continue
-				if datetime.utcnow() - dateutil.parser.isoparse(thread['creation']).replace(tzinfo=None) < timedelta(minutes=app.config['SCRAPER_DELAY']):
-					continue
+	try:
+		res = requests.get(url, timeout=5, allow_redirects=False)
+		time.sleep(1)
+		assert res.status_code == 200, f"Catalog response status code: {res.status_code}."
+	except Exception as e:
+		logging.error(f"{url} {e}")
+		return
 
-				thread_orm = Thread.get_or_create(thread['threadId'])
-				# If number of posts in thread is same as in database, continue
-				if thread['postCount'] + 1 == thread_orm.total_posts:
-					continue
+	catalog = res.json()
+	for thread in tqdm(catalog[::-1]): # Reverse direction to scrape oldest threads first
+		db.session.rollback()
 
-				thread_url = f"https://kohlchan.net/int/res/{thread['threadId']}.json"
-				scrape_thread(thread_url, thread_orm)
+		# If thread is < SCRAPER_DELAY minutes old, continue
+		if datetime.utcnow() - dateutil.parser.isoparse(thread['creation']).replace(tzinfo=None) < timedelta(minutes=app.config['SCRAPER_DELAY']):
+			continue
 
-			except Exception as e:
-				print(f"Thread failed: {e}\n{thread}")
+		thread_orm = Thread.get_or_create(thread['threadId'])
+		# If number of posts in thread is same as in database, continue
+		if thread['postCount'] + 1 == thread_orm.total_posts:
+			continue
 
-	logging.info(f'Finished: {datetime.utcnow()}')
+		thread_url = f"https://kohlchan.net/int/res/{thread['threadId']}.json"
+		scrape_thread(thread_url, thread_orm)
+
+	logging.warning(f'Finished: {datetime.utcnow()}')
 
 def scrape_thread(url, thread_orm=None):
-	res = requests.get(url, timeout=5, allow_redirects=False)
-	time.sleep(1)
-	if res.status_code == 200:
-		thread = res.json()
+	try:
+		res = requests.get(url, timeout=5, allow_redirects=False)
+		time.sleep(1)
+		assert res.status_code == 200, f"Thread response status code: {res.status_code}."
+	except Exception as e:
+		logging.error(f"{url} {e}")
+		return
 
-		if not thread_orm:
-			thread_orm = Thread.get_or_create(thread['threadId'])
+	thread = res.json()
+	if not thread_orm:
+		thread_orm = Thread.get_or_create(thread['threadId'])
 
-		posts = [{k:v for k,v in thread.items() if k != 'posts'}] + thread['posts']
-		for post in posts:
-			try:
-				scrape_post(post, thread_orm)
-			except Exception as e:
-				logging.error(f'Post failed: {e}\n{post}')
+	posts = [{k:v for k,v in thread.items() if k != 'posts'}] + thread['posts']
+	for post in posts:
+		scrape_post(post, thread_orm)
 
-		thread_orm.total_posts = len(thread_orm.posts_contained)
-		if thread_orm.total_posts == 0:
-			db.session.rollback()
-		else:
-			db.session.commit()
+	thread_orm.total_posts = len(thread_orm.posts_contained)
+	if thread_orm.total_posts == 0:
+		db.session.rollback()
+	else:
+		db.session.commit()
 
 def scrape_post(post_json, thread_orm):
 	is_op = False
@@ -110,10 +113,7 @@ def scrape_post(post_json, thread_orm):
 
 	files = post_json['files']
 	for file in files:
-		try:
-			scrape_file(file, post_orm)
-		except Exception as e:
-			logging.error(f'File failed: {e}\n{file}')
+		scrape_file(file, post_orm)
 
 def scrape_file(file_json, post_orm):
 	orig_name = file_json['originalName']
@@ -149,12 +149,15 @@ def scrape_file(file_json, post_orm):
 def save_file(file_url, filename):
 	try:
 		res = requests.get(file_url, timeout=5, allow_redirects=False)
-		if res.status_code == 200:
-			path = os.path.join(app.config['MEDIA_FOLDER'], filename)
-			with open(path, 'wb') as f:
-				f.write(res.content)
+		assert res.status_code == 200, f"File response status code: {res.status_code}."
 	except Exception as e:
-		logging.error(f'Media download failed: {filename}\n{e}')
+		logging.error(f"{file_url} {e}")
+		return
+
+	path = os.path.join(app.config['MEDIA_FOLDER'], filename)
+	with open(path, 'wb') as f:
+		f.write(res.content)
+
 
 def purge_blacklisted_files():
 	with open(app.config['BLACKLIST_FILE'], 'r') as f:
@@ -164,4 +167,7 @@ def purge_blacklisted_files():
 					os.remove(os.path.join(app.config['MEDIA_FOLDER'], file))
 
 if __name__ == '__main__':
-	scrape_catalog('https://kohlchan.net/int/catalog.json')
+	try:
+		scrape_catalog('https://kohlchan.net/int/catalog.json')
+	except Exception:
+		logging.exception('Unexpected exception:')
