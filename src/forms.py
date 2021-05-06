@@ -6,14 +6,19 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, SubmitField, IntegerField, TextAreaField, HiddenField, SelectField
 from wtforms.validators import Optional, DataRequired, ValidationError, Length
 from wtforms.fields.html5 import DateField
+from sqlalchemy import func
 
 from src import app
 from src.models import Post, File, Report
 from src.utils import get_ip_address
 
-def prevent_blank_search(form, submit):
-	if not form.post_num.data and not form.subject.data and not form.message.data:
-		raise ValidationError("Search criteria required")
+# Flags with duplicate names (Georgia) will overlap
+def get_flag_list():
+	flags = Post.query.with_entities(Post.flag_name, func.count(Post.flag_name))\
+		.filter(Post.flag_name != None)\
+		.group_by(Post.flag_name).order_by(Post.flag_name).all()
+	flags = [('Show All', 'Show All')] + [(f[0], f[0]) for f in flags if f[1] >= 100]
+	return flags
 
 class SearchForm(FlaskForm):
 	post_num = IntegerField(validators=[Optional()])
@@ -21,7 +26,7 @@ class SearchForm(FlaskForm):
 	message = StringField(validators=[Optional(), Length(min=3, message='Message field must be 3 or more characters.')])
 	is_op = BooleanField()
 	banned = BooleanField()
-	flag = SelectField(choices=[('Show All', 'Show All')] + [f for f in app.config['FLAG_MAP'].items()], validators=[Optional()])
+	flag = SelectField(choices=get_flag_list(), validators=[Optional()])
 	start_date = DateField(validators=[Optional()])
 	end_date = DateField(validators=[Optional()])
 	filename = StringField(validators=[Optional()])

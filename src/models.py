@@ -69,16 +69,6 @@ class Post(db.Model):
 		td = datetime.utcnow() - self.date
 		return f'Posted {format_timedelta(td)} ago'
 
-	@property
-	def get_flag_name(self):
-		if self.flag_name:
-			return self.flag_name
-		flags = concat_dicts(app.config['FLAG_MAP'], app.config['STATE_FLAGS'], app.config['MISC_FLAGS'], app.config['FRENCH_FLAGS'])
-		try:
-			return flags[self.flag]
-		except:
-			return self.flag
-
 	def get_replies(self, posts):
 		replies = []
 		for post in posts:

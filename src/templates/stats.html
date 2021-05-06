@@ -5,9 +5,7 @@
 	<div class="flag-list">
 	{% for flag in flag_list %}
 		<div class="flag-list__item">
-			{% if flag['label'] %}
-				<img src="{{url_for('static', filename='flags/' + flag['label'])}}" title="{{flag['name']}}" alt="" onerror="this.src='/static/icons/x.png'"> <span>{{flag['count']}} Posts</span>
-			{% endif %}
+			<img src="{{url_for('static', filename='flags/' + flag[0])}}" title="{{flag[1]}}" alt="" onerror="this.src='/static/icons/x.png'"> <span>{{flag[2]}} Posts</span>
 		</div>
 	{% endfor %}
 	</div>

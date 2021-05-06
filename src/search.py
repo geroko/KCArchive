@@ -17,7 +17,7 @@ def search_posts(post_num, subject, message, flag, is_op, banned, start_date, en
 	if message:
 		posts = posts.filter(text(f"tsv_message @@ websearch_to_tsquery('english', :message)").params(message=message))
 	if flag and flag != 'Show All':
-		posts = posts.filter(Post.flag == flag)
+		posts = posts.filter(Post.flag_name == flag)
 	if is_op == True:
 		posts = posts.filter(Post.is_op == True)
 	if banned == True:

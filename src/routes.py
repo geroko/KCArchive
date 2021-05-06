@@ -87,19 +87,23 @@ def report(post_num):
 		return redirect(url_for('thread', thread_num=post.thread.thread_num))
 	return render_template('report_form.html', post=post, form=form, title='Report')
 
-@app.route('/stats')
-@cache.cached(timeout=1800)
-def stats():
-	flag_list = db.session.query(Post.flag, func.count(Post.flag))\
-		.group_by(Post.flag)\
+@cache.cached(timeout=86400, key_prefix='stats')
+def get_cached_stats():
+	flag_list = Post.query.with_entities(Post.flag, Post.flag_name, func.count(Post.flag))\
+		.filter(Post.flag != None, Post.flag_name != None)\
+		.group_by(Post.flag, Post.flag_name)\
 		.order_by(func.count(Post.flag).desc()).all()
-	flags = concat_dicts(app.config['FLAG_MAP'], app.config['STATE_FLAGS'], app.config['MISC_FLAGS'], app.config['FRENCH_FLAGS'])
-	flag_list = [{'label':f[0], 'name':flags.get(f[0], f[0]), 'count':f[1]} for f in flag_list]
 
-	most_posted = db.session.query(File.filename, func.count(File.filename))\
+	most_posted = File.query.with_entities(File.filename, func.count(File.filename))\
 		.filter(File.filename != 'audioGenericThumb.png', File.filename != 'genericThumb.png')\
 		.group_by(File.filename)\
-		.order_by(func.count(File.filename).desc()).limit(100)
+		.order_by(func.count(File.filename).desc()).limit(100).all()
+
+	return flag_list, most_posted
+
+@app.route('/stats')
+def stats():
+	flag_list, most_posted = get_cached_stats()
 	return render_template('stats.html', flag_list=flag_list, most_posted=most_posted, title='Stats')
 
 @app.route('/admin', methods=['GET', 'POST'])
