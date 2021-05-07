@@ -55,6 +55,10 @@
 		&:visited {
 			color: purple;
 		}
+
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 
 	&__header {
@@ -76,10 +80,6 @@
 
 	&__reply {
 		margin-left: .2rem;
-
-		&:hover {
-			text-decoration: underline;
-		}
 	}
 
 	&__content {
