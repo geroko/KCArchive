@@ -120,8 +120,11 @@ def scrape_file(file_json, post_orm):
 	size = file_json['size']
 
 	filename = file_json['thumb'].split('/')[-1]
-	if filename == 'spoiler.png':  # Generate filename for spoilered thumbs
+	file_url = f"https://kohlchan.net{file_json['thumb']}"
+	if filename == 'spoiler.png':
+		# Generate filename for spoilered thumbs. This has issues since not all thumbs begin with 't_'
 		filename = 't_' + file_json['path'].split('/')[-1].split('.')[0]
+		file_url = f"https://kohlchan.net/.media/{filename}"
 
 	width, height = file_json['width'], file_json['height']
 	if width == None or height == None:  # If no width or height (such as for audio files), set to None
@@ -138,16 +141,12 @@ def scrape_file(file_json, post_orm):
 	if os.path.isfile(os.path.join(app.config['MEDIA_FOLDER'], filename)):
 		return
 
-	if filename == 'genericThumb.png' or filename == 'audioGenericThumb.png':
-		file_url = f"https://kohlchan.net/{filename}"
-	else:
-		file_url = f"https://kohlchan.net/.media/{filename}"
-
 	time.sleep(1)
-	threading.Thread(target=save_file, args=[file_url, filename]).start()
+	threading.Thread(target=save_file, args=[file_url]).start()
 
-def save_file(file_url, filename):
+def save_file(file_url):
 	try:
+		filename = file_url.split('/')[-1]
 		res = requests.get(file_url, timeout=5, allow_redirects=False)
 		assert res.status_code == 200, f"File response status code: {res.status_code}."
 	except Exception as e:
