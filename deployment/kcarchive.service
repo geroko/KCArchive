@@ -1,0 +1,10 @@
+[Unit]
+Description="KCArchive uWSGI service"
+After=postgresql.service
+
+[Service]
+WorkingDirectory=/var/www/KCArchive
+ExecStart=/venv/bin/uwsgi --ini deployment/uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target

@@ -1,16 +1,15 @@
 import os
 
-basedir = os.path.dirname(__file__)
-
-# Set DEBUG to false, and change BASIC_AUTH user and pass before deploying
-DEBUG = True
+# Change BASIC_AUTH user and pass before deploying
 BASIC_AUTH_USERNAME = 'admin'
 BASIC_AUTH_PASSWORD = 'changeme'
 
+# Change user & pass to your postgres login details
 SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://user:pass@localhost/kcarchive'
+
 SECRET_KEY = os.urandom(16)
-MEDIA_FOLDER = os.path.join(basedir, 'media')
-BLACKLIST_FILE = os.path.join(basedir, 'blacklist.txt')
+MEDIA_FOLDER = '/var/www/KCArchive/instance/media'
+BLACKLIST_FILE = '/var/www/KCArchive/instance/blacklist.txt'
 
 CACHE_TYPE = 'redis'
 SESSION_TYPE = 'redis'
@@ -20,12 +19,9 @@ SCRAPER_DELAY = 0
 
 BANNER = ''
 
-'''
-Add posts to about page with syntax:
-{
-	'subject':'First post',
-	'message':'Hello world'
-}
-'''
-ABOUT = []
-
+ABOUT = [
+	{
+		'subject':'Example post',
+		'message':'Hello world'
+	}
+]
