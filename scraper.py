@@ -19,10 +19,9 @@ with open(app.config['BLACKLIST_FILE']) as f:
 	blacklist = [line.strip('\n') for line in f]
 
 def scrape_catalog(url):
-	logging.warning(f'\nStarted: {datetime.utcnow()}')
-
 	try:
-		res = requests.get(url, timeout=5, allow_redirects=False)
+		# Redirects are disabled to prevent scraping threads that have been moved to another board
+		res = requests.get(url, timeout=10, allow_redirects=False)
 		time.sleep(1)
 		assert res.status_code == 200, f"Catalog response status code: {res.status_code}."
 	except Exception as e:
@@ -45,11 +44,9 @@ def scrape_catalog(url):
 		thread_url = f"https://kohlchan.net/int/res/{thread['threadId']}.json"
 		scrape_thread(thread_url, thread_orm)
 
-	logging.warning(f'Finished: {datetime.utcnow()}')
-
 def scrape_thread(url, thread_orm=None):
 	try:
-		res = requests.get(url, timeout=5, allow_redirects=False)
+		res = requests.get(url, timeout=10, allow_redirects=False)
 		time.sleep(1)
 		assert res.status_code == 200, f"Thread response status code: {res.status_code}."
 	except Exception as e:
@@ -147,16 +144,29 @@ def scrape_file(file_json, post_orm):
 def save_file(file_url):
 	try:
 		filename = file_url.split('/')[-1]
-		res = requests.get(file_url, timeout=5, allow_redirects=False)
+		res = requests.get(file_url, timeout=10, allow_redirects=False)
 		assert res.status_code == 200, f"File response status code: {res.status_code}."
 	except Exception as e:
 		logging.error(f"{file_url} {e}")
+		# Add failed files to list unless they're 404'd
+		with open('instance/failed.txt', 'a') as f:
+			try:
+				if res.status_code != 302: # Redirect means it's 404'd
+					f.write(file_url + '\n')
+			except:
+				f.write(file_url + '\n')
 		return
-
 	path = os.path.join(app.config['MEDIA_FOLDER'], filename)
 	with open(path, 'wb') as f:
 		f.write(res.content)
 
+def retry_failed_files():
+	with open('instance/failed.txt', 'r') as f:
+		failed = [l.strip('\n') for l in f]
+	open('instance/failed.txt', 'w').close()
+	for file_url in failed:
+		time.sleep(1)
+		save_file(file_url)
 
 def purge_blacklisted_files():
 	with open(app.config['BLACKLIST_FILE'], 'r') as f:
@@ -166,7 +176,16 @@ def purge_blacklisted_files():
 					os.remove(os.path.join(app.config['MEDIA_FOLDER'], file))
 
 if __name__ == '__main__':
+	logging.warning(f'\nStarted: {datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}')
 	try:
 		scrape_catalog('https://kohlchan.net/int/catalog.json')
 	except Exception:
 		logging.exception('Unexpected exception:')
+	finally:
+		# Wait for all files to finish before retrying failed downloads
+		for t in threading.enumerate():
+			if t.name != 'MainThread' and t.daemon == False:
+				t.join()
+
+		retry_failed_files()
+	logging.warning(f'Finished: {datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}')
