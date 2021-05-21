@@ -4,7 +4,6 @@ from math import ceil
 from flask import render_template, url_for, send_from_directory, flash, redirect, request, session, g
 from sqlalchemy import func
 from sqlalchemy.orm import lazyload
-from flask_sqlalchemy import Pagination
 
 from src import app, db, basic_auth, cache
 from src.models import Thread, Post, File, Report
@@ -23,13 +22,8 @@ def get_banner_message():
 @app.route('/catalog/', defaults={'page_num':1})
 @app.route('/catalog/<int:page_num>')
 def catalog(page_num):
-	count = Thread.query.count()
-	if page_num > ceil(count / 50):
-		return redirect(url_for('catalog'))
-	upper_bound = Thread.query.order_by(Thread.thread_num.desc()).offset((page_num - 1) * 50).first().thread_num
-	items = Post.query.filter(Post.post_num <= upper_bound, Post.is_op == True).order_by(Post.post_num.desc()).options(lazyload(Post.files_contained)).limit(50)
-	posts = Pagination(query=None, page=page_num, per_page=50, total=count, items=items)
-	return render_template('catalog.html', posts=posts, title=f'Page {page_num}')
+	threads = Thread.query.order_by(Thread.thread_num.desc()).filter(Thread.total_posts != None).paginate(page=page_num, per_page=50, error_out=False)
+	return render_template('catalog.html', threads=threads, title=f'Page {page_num}')
 
 @app.route('/thread/<int:thread_num>')
 def thread(thread_num):
@@ -41,24 +35,7 @@ def thread(thread_num):
 def search():
 	form = SearchForm()
 	return render_template('search.html', form=form, title='Search')
-'''
-@app.route('/search/', defaults={'page_num':1})
-@app.route('/search/<int:page_num>/')
-def search_results(page_num):
-	form = SearchForm(formdata=request.args, meta={'csrf':False})
-	if form.validate():
-		results = search_posts(**form.data)
-		count = results.with_entities(Post.post_num).count()
-		if page_num > ceil(count / 30):
-			items = []
-		else:
-			upper_bound = results.with_entities(Post.post_num).offset((page_num - 1) * 30).first()[0]
-			items = results.filter(Post.post_num <= upper_bound).limit(30)
-		posts = Pagination(query=None, page=page_num, per_page=30, total=count, items=items)
 
-		return render_template('search.html', form=form, posts=posts, title="Search Results", query=request.args)
-	return render_template('search.html', form=form, title="Search")
-'''
 @app.route('/search/', defaults={'page_num':1})
 @app.route('/search/<int:page_num>')
 def search_results(page_num):

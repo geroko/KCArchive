@@ -3,16 +3,16 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-	<h1 class="page-title">Page {{posts.page}}</h1>
+	<h1 class="page-title">Page {{threads.page}}</h1>
 
 	<div class="catalog">
-	{% for post in posts.items %}
-
-		{% include '_catalog-thread.html' %}
-
+	{% for thread in threads.items %}
+		{% with post = thread.op_post %}
+			{% include '_catalog-thread.html' %}
+		{% endwith %}
 	{% endfor %}
 	</div>
 
-	{{ paginator('catalog', posts) }}
+	{{ paginator('catalog', threads) }}
 
 {% endblock %}
