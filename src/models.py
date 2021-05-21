@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 
+from sqlalchemy import DDL
 from sqlalchemy.dialects.postgresql import TSVECTOR
 
 from src import app, db
@@ -75,6 +76,19 @@ class Post(db.Model):
 			if f'>>{self.post_num}' in post.message:
 				replies.append(post.post_num)
 		return replies
+
+tsv_message_trigger = DDL('''\
+	CREATE TRIGGER tsv_message_update BEFORE INSERT OR UPDATE
+	ON post FOR EACH ROW EXECUTE PROCEDURE
+	tsvector_update_trigger(tsv_message, 'pg_catalog.english', message);
+''')
+tsv_subject_trigger = DDL('''\
+	CREATE TRIGGER tsv_subject_update BEFORE INSERT OR UPDATE
+	ON post FOR EACH ROW EXECUTE PROCEDURE
+	tsvector_update_trigger(tsv_subject, 'pg_catalog.english', subject);
+''')
+db.event.listen(Post.__table__, 'after_create', tsv_message_trigger)
+db.event.listen(Post.__table__, 'after_create', tsv_subject_trigger)
 
 
 class File(db.Model):
