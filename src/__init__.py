@@ -17,5 +17,6 @@ Session(app)
 from src import models
 
 db.create_all()
+cache.clear()
 
 from src import routes

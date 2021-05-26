@@ -50,7 +50,7 @@ def search_results(page_num):
 		return render_template('search.html', form=form, posts=posts, title="Search Results", query=request.args, page_num=page_num)
 	return render_template('search.html', form=form, title="Search")
 
-@app.route('/report/<post_num>', methods=['GET', 'POST'])
+@app.route('/report/<int:post_num>', methods=['GET', 'POST'])
 def report(post_num):
 	post = Post.query.get_or_404(post_num)
 	form = ReportForm()
@@ -90,7 +90,7 @@ def admin():
 	reports = Report.query.filter(Report.dismissed == False).order_by(Report.date.desc()).all()
 	return render_template('admin.html', reports=reports)
 
-@app.route('/delete_file/<file_id>', methods=['POST'])
+@app.route('/delete_file/<int:file_id>', methods=['POST'])
 @basic_auth.required
 def delete_file(file_id):
 	file = File.query.get_or_404(file_id)
@@ -105,7 +105,7 @@ def delete_file(file_id):
 	flash(f'File: {file.cropped_title} deleted.')
 	return redirect(referrer_or_index())
 
-@app.route('/delete_files/<post_num>', methods=['POST'])
+@app.route('/delete_files/<int:post_num>', methods=['POST'])
 @basic_auth.required
 def delete_files(post_num):
 	post = Post.query.get_or_404(post_num)
@@ -130,7 +130,7 @@ def dismiss_all():
 	db.session.commit()
 	return redirect(referrer_or_index())
 
-@app.route('/dismiss/<report_id>', methods=['POST'])
+@app.route('/dismiss/<int:report_id>', methods=['POST'])
 @basic_auth.required
 def dismiss(report_id):
 	report = Report.query.get_or_404(report_id)
