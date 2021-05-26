@@ -18,10 +18,12 @@ logging.basicConfig(level=logging.WARNING, filename='instance/kcarchive.log', fo
 with open(app.config['BLACKLIST_FILE']) as f:
 	blacklist = [line.strip('\n') for line in f]
 
+s = requests.Session()
+
 def scrape_catalog(url):
 	try:
 		# Redirects are disabled to prevent scraping threads that have been moved to another board
-		res = requests.get(url, timeout=10, allow_redirects=False)
+		res = s.get(url, timeout=10, allow_redirects=False)
 		time.sleep(1)
 		assert res.status_code == 200, f"Catalog response status code: {res.status_code}."
 	except Exception as e:
@@ -46,7 +48,7 @@ def scrape_catalog(url):
 
 def scrape_thread(url, thread_orm=None):
 	try:
-		res = requests.get(url, timeout=10, allow_redirects=False)
+		res = s.get(url, timeout=10, allow_redirects=False)
 		time.sleep(1)
 		assert res.status_code == 200, f"Thread response status code: {res.status_code}."
 	except Exception as e:
@@ -144,7 +146,7 @@ def scrape_file(file_json, post_orm):
 def save_file(file_url):
 	try:
 		filename = file_url.split('/')[-1]
-		res = requests.get(file_url, timeout=10, allow_redirects=False)
+		res = s.get(file_url, timeout=10, allow_redirects=False)
 		assert res.status_code == 200, f"File response status code: {res.status_code}."
 	except Exception as e:
 		logging.error(f"{file_url} {e}")
