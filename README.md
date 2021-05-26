@@ -3,7 +3,7 @@
 	https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04
 1. Install dependencies.
 	`sudo apt update`
-	`sudo apt install git postgresql python3-dev nginx python3-venv redis`
+	`sudo apt install build-essential git postgresql python3-dev nginx python3-venv redis`
 1. Clone repo.
 	`git clone https://github.com/geroko/KCArchive.git /var/www/KCArchive`
 1. Create venv inside KCArchive folder.
@@ -12,9 +12,10 @@
 1. Activate venv and install required packages.
 	`source venv/bin/activate`
 	`pip install -r deployment/requirements.txt`
-1. Create postgres user and database. Replace $username and $password with your details.
+1. Create postgres user and database. Replace $username with your username.
 	`sudo -u postgres psql`
-	`CREATE USER $username AUTHENTICATED BY $password;`
+	`CREATE USER $username;`
+	`\password $username`
 	`CREATE DATABASE kcarchive OWNER $username;`
 	`\q`
 1. Run install script.
